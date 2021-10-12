@@ -3,16 +3,27 @@ package com.TrayIndicators;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
 
-import java.awt.*;
+import java.awt.Color;
 
 @ConfigGroup("Tray Indicators")
 public interface TrayIndicatorsConfig extends Config {
+
+	//region Health Options
+	@ConfigSection(
+			name = "Hitpoints",
+			description = "",
+			position = 0
+	)
+	String healthSection = "Hitpoints";
+
 	@ConfigItem(
 			keyName = "health",
-			name = "Enable Health",
+			name = "Enable Hitpoints",
 			description = "",
-			position = 1
+			section = healthSection,
+			position = 0
 	)
 	default boolean health()
 	{
@@ -21,20 +32,37 @@ public interface TrayIndicatorsConfig extends Config {
 
 	@ConfigItem(
 			keyName = "healthColor",
-			name = "",
+			name = "Background Color",
 			description = "",
+			section = healthSection,
+			position = 1
+	)
+	default Color healthColor() { return Color.decode("#ff0000"); }
+
+	@ConfigItem(
+			keyName = "healthTxtColor",
+			name = "Text Color",
+			description = "",
+			section = healthSection,
 			position = 2
 	)
-	default Color healthColor()
-	{
-		return Color.decode("#ff0000");
-	}
+	default Color healthTxtColor() { return Color.decode("#ffffff"); }
+	//endregion
+
+	//region Prayer Options
+	@ConfigSection(
+			name = "Prayer",
+			description = "",
+			position = 1
+	)
+	String prayerSection = "Prayer";
 
 	@ConfigItem(
 			keyName = "prayer",
 			name = "Enable Prayer",
 			description = "",
-			position = 3
+			section = prayerSection,
+			position = 0
 	)
 	default boolean prayer()
 	{
@@ -43,9 +71,10 @@ public interface TrayIndicatorsConfig extends Config {
 
 	@ConfigItem(
 			keyName = "prayerColor",
-			name = "",
+			name = "Background Color",
 			description = "",
-			position = 4
+			section = prayerSection,
+			position = 1
 	)
 	default Color prayerColor()
 	{
@@ -53,10 +82,32 @@ public interface TrayIndicatorsConfig extends Config {
 	}
 
 	@ConfigItem(
+			keyName = "prayerTxtColor",
+			name = "Text Color",
+			description = "",
+			section = prayerSection,
+			position = 2
+	)
+	default Color prayerTxtColor()
+	{
+		return Color.decode("#000000");
+	}
+	//endregion
+
+	//region Absorption Options
+	@ConfigSection(
+			name = "Absorption",
+			description = "",
+			position = 2
+	)
+	String absorptionSection = "Absorption";
+
+	@ConfigItem(
 			keyName = "absorption",
 			name = "Enable Absorption",
 			description = "",
-			position = 5
+			section = absorptionSection,
+			position = 0
 	)
 	default boolean absorption()
 	{
@@ -65,9 +116,10 @@ public interface TrayIndicatorsConfig extends Config {
 
 	@ConfigItem(
 			keyName = "absorptionColor",
-			name = "",
+			name = "Background Color",
 			description = "",
-			position = 6
+			section = absorptionSection,
+			position = 1
 	)
 
 	default Color absorptionColor()
@@ -75,4 +127,17 @@ public interface TrayIndicatorsConfig extends Config {
 		return Color.decode("#ffffff");
 	}
 
+	@ConfigItem(
+			keyName = "absorptionTxtColor",
+			name = "Text Color",
+			description = "",
+			section = absorptionSection,
+			position = 2
+	)
+
+	default Color absorptionTxtColor()
+	{
+		return Color.decode("#000000");
+	}
+	//endregion
 }

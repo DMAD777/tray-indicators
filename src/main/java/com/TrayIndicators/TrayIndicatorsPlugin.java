@@ -206,11 +206,11 @@ public class TrayIndicatorsPlugin extends Plugin
 			switch(i) {
 				case 0:
 					text = Integer.toString(client.getBoostedSkillLevel(Skill.HITPOINTS));
-					graphics.setColor(new Color ( 0, 0, 0 ));
+					graphics.setColor(config.healthTxtColor());
 					break;
 				case 1:
 					text = Integer.toString(client.getBoostedSkillLevel(Skill.PRAYER));
-					graphics.setColor(new Color ( 0, 0, 0 ));
+					graphics.setColor(config.prayerTxtColor());
 					break;
 				case 2:
 					if(client.getVar(Varbits.NMZ_ABSORPTION) == 1000)
@@ -220,7 +220,7 @@ public class TrayIndicatorsPlugin extends Plugin
 
 
 					text = Integer.toString(client.getVar(Varbits.NMZ_ABSORPTION));
-					graphics.setColor(new Color ( 0, 0, 0 ));
+					graphics.setColor(config.absorptionTxtColor());
 					break;
 			}
 
