@@ -26,11 +26,11 @@ import java.util.List;
 )
 public class TrayIndicatorsPlugin extends Plugin
 {
+	enum IconType { Health, Prayer, Absorption }
+
 	private static final int[] NMZ_MAP_REGION = {9033};
 
-	private boolean startUp;
-
-	private java.util.List<TrayIcon> trayIcons = new ArrayList<TrayIcon>(); // Should never be bigger then 3
+	private final List<TrayIcon> trayIcons = new ArrayList<>(); // Should never be bigger then 3
 
 	@Inject
 	private Client client;
@@ -38,18 +38,22 @@ public class TrayIndicatorsPlugin extends Plugin
 	@Inject
 	private TrayIndicatorsConfig config;
 
-	enum IconType { Health, Prayer, Absorption }
-
 	@Provides
 	TrayIndicatorsConfig getConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(TrayIndicatorsConfig.class);
 	}
 
-	@Override
-	protected void startUp() throws Exception
+	public void initIcons()
 	{
-		startUp = true;
+		if (config.health())
+			trayIcons.add(IconType.Health.ordinal(), setupTrayIcon(IconType.Health));
+
+		if (config.prayer())
+			trayIcons.add(IconType.Prayer.ordinal(), setupTrayIcon(IconType.Prayer));
+
+		if (isInNightmareZone() && config.absorption())
+			trayIcons.add(IconType.Absorption.ordinal(), setupTrayIcon(IconType.Absorption));
 	}
 
 	@Subscribe
@@ -74,13 +78,11 @@ public class TrayIndicatorsPlugin extends Plugin
 					}
 					break;
 				case "absorption":
-					if (event.getNewValue().equals("true")) {
+					if (event.getNewValue().equals("true") && isInNightmareZone()) {
 						trayIcons.add(IconType.Absorption.ordinal(), setupTrayIcon(IconType.Absorption));
 					} else {
 						removeTrayIcon(IconType.Absorption);
 					}
-					break;
-				default:
 					break;
 			}
 		}
@@ -91,42 +93,36 @@ public class TrayIndicatorsPlugin extends Plugin
 	{
 		if (event.getGameState() == GameState.LOGIN_SCREEN)
 		{
-			if(startUp == false) {
-				removeAllTrayIcons();
-				startUp = true;
-			}
+			removeAllTrayIcons();
+		}
+		else if (event.getGameState() == GameState.LOGGED_IN && trayIcons.isEmpty())
+		{
+			initIcons();
+		}
+	}
+
+	@Override
+	protected void startUp() throws Exception
+	{
+		if (client.getGameState() == GameState.LOGGED_IN && trayIcons.isEmpty())
+		{
+			initIcons();
 		}
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		startUp = false;
 		removeAllTrayIcons();
 	}
 
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		if(startUp)
-		{
-			if (config.health())
-				trayIcons.add(IconType.Health.ordinal(), setupTrayIcon(IconType.Health));
-
-			if (config.prayer())
-				trayIcons.add(IconType.Prayer.ordinal(), setupTrayIcon(IconType.Prayer));
-
-			if(isInNightmareZone() && config.absorption())
-				trayIcons.add(IconType.Absorption.ordinal(), setupTrayIcon(IconType.Absorption));
-
-			startUp = false;
-		}
-
-		// Causes issue #2
 		if (config.absorption()) {
 			if (isInNightmareZone() && !indexExists(trayIcons, IconType.Absorption.ordinal())) {
 				trayIcons.add(IconType.Absorption.ordinal(), setupTrayIcon(IconType.Absorption));
-			} else if (!isInNightmareZone() && indexExists(trayIcons, IconType.Absorption.ordinal())) {
+			} else if (!isInNightmareZone()) {
 				removeTrayIcon(IconType.Absorption);
 			}
 		}
@@ -152,6 +148,17 @@ public class TrayIndicatorsPlugin extends Plugin
 						trayIcon.setImage(createImage(IconType.Absorption));
 					}
 					break;
+			}
+		}
+
+		if (trayIcons.size() > IconType.values().length)
+		{
+			log.warn("We have more than " + IconType.values().length + " icons which should not be the case.");
+			removeAllTrayIcons();
+
+			if (client.getGameState() == GameState.LOGGED_IN)
+			{
+				initIcons();
 			}
 		}
 	}
@@ -185,7 +192,7 @@ public class TrayIndicatorsPlugin extends Plugin
 		BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D graphics = image.createGraphics();
 
-		// Set the background color
+		// Set the background color of the icon.
 		switch(type) {
 			case Health:
 				graphics.setColor(config.healthColor());
@@ -200,6 +207,7 @@ public class TrayIndicatorsPlugin extends Plugin
 
 		graphics.fillRect ( 0, 0, image.getWidth(), image.getHeight());
 
+		// If we are in-game we draw the text on the icon.
 		if(client.getLocalPlayer() != null) {
 			String text = "";
 			switch(type) {
@@ -230,23 +238,15 @@ public class TrayIndicatorsPlugin extends Plugin
 			graphics.drawString(text, x, y);
 		}
 
+		graphics.dispose();
+
 		return image;
-	}
-
-	public boolean isInNightmareZone()
-	{
-		return Arrays.equals(client.getMapRegions(), NMZ_MAP_REGION);
-	}
-
-	public boolean indexExists(final List list, final int index)
-	{
-		return index >= 0 && index < list.size();
 	}
 
 	public void removeTrayIcon(IconType type){
 		if(!indexExists(trayIcons, type.ordinal()))
 		{
-			log.info("Index: '" + type.ordinal() + "' (" + type + ") does not exist for trayIcons ;(");
+			//log.info("Index: '" + type.ordinal() + "' (" + type + ") does not exist for trayIcons ;(");
 			return;
 		}
 
@@ -259,12 +259,20 @@ public class TrayIndicatorsPlugin extends Plugin
 	public void removeAllTrayIcons(){
 		SystemTray systemTray = SystemTray.getSystemTray();
 
-		for (int i=0; i < trayIcons.size(); i++)
-		{
-			TrayIcon trayIcon = trayIcons.get(i);
+		for (TrayIcon trayIcon : trayIcons) {
 			systemTray.remove(trayIcon);
 		}
 
-		trayIcons.removeAll(trayIcons);
+		trayIcons.clear();
+	}
+
+	public boolean isInNightmareZone()
+	{
+		return Arrays.equals(client.getMapRegions(), NMZ_MAP_REGION);
+	}
+
+	public boolean indexExists(final List<?> list, final int index)
+	{
+		return index >= 0 && index < list.size();
 	}
 }
