@@ -27,7 +27,10 @@ import java.util.List;
 public class TrayIndicatorsPlugin extends Plugin
 {
 	private static final int[] NMZ_MAP_REGION = {9033};
+
 	private boolean startUp;
+
+	private java.util.List<TrayIcon> trayIcons = new ArrayList<TrayIcon>(); // Should never be bigger then 3
 
 	@Inject
 	private Client client;
@@ -35,13 +38,13 @@ public class TrayIndicatorsPlugin extends Plugin
 	@Inject
 	private TrayIndicatorsConfig config;
 
+	enum IconType { Health, Prayer, Absorption }
+
 	@Provides
 	TrayIndicatorsConfig getConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(TrayIndicatorsConfig.class);
 	}
-
-	private java.util.List<TrayIcon> trayIcons = new ArrayList<TrayIcon>();
 
 	@Override
 	protected void startUp() throws Exception
@@ -58,23 +61,23 @@ public class TrayIndicatorsPlugin extends Plugin
 			{
 				case "health":
 					if (event.getNewValue().equals("true")) {
-						trayIcons.add(0, setupTrayIcon(0));
-					}else {
-						removeTrayIcon(0);
+						trayIcons.add(IconType.Health.ordinal(), setupTrayIcon(IconType.Health));
+					} else {
+						removeTrayIcon(IconType.Health);
 					}
 					break;
 				case "prayer":
 					if (event.getNewValue().equals("true")) {
-						trayIcons.add(1, setupTrayIcon(1));
-					}else{
-						removeTrayIcon(1);
+						trayIcons.add(IconType.Prayer.ordinal(), setupTrayIcon(IconType.Prayer));
+					} else {
+						removeTrayIcon(IconType.Prayer);
 					}
 					break;
 				case "absorption":
 					if (event.getNewValue().equals("true")) {
-						trayIcons.add(2, setupTrayIcon(2));
-					}else {
-						removeTrayIcon(2);
+						trayIcons.add(IconType.Absorption.ordinal(), setupTrayIcon(IconType.Absorption));
+					} else {
+						removeTrayIcon(IconType.Absorption);
 					}
 					break;
 				default:
@@ -86,7 +89,6 @@ public class TrayIndicatorsPlugin extends Plugin
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
-
 		if (event.getGameState() == GameState.LOGIN_SCREEN)
 		{
 			if(startUp == false) {
@@ -109,52 +111,52 @@ public class TrayIndicatorsPlugin extends Plugin
 		if(startUp)
 		{
 			if (config.health())
-				trayIcons.add(0, setupTrayIcon(0));
+				trayIcons.add(IconType.Health.ordinal(), setupTrayIcon(IconType.Health));
 
 			if (config.prayer())
-				trayIcons.add(1, setupTrayIcon(1));
+				trayIcons.add(IconType.Prayer.ordinal(), setupTrayIcon(IconType.Prayer));
 
 			if(isInNightmareZone() && config.absorption())
-				trayIcons.add(2, setupTrayIcon(2));
+				trayIcons.add(IconType.Absorption.ordinal(), setupTrayIcon(IconType.Absorption));
 
 			startUp = false;
 		}
 
-		SystemTray systemTray = SystemTray.getSystemTray();
-
+		// Causes issue #2
 		if (config.absorption()) {
-			if (isInNightmareZone() && !indexExists(trayIcons, 2)) {
-				trayIcons.add(2, setupTrayIcon(2));
-			} else if (!isInNightmareZone() && indexExists(trayIcons, 2)) {
-				removeTrayIcon(2);
+			if (isInNightmareZone() && !indexExists(trayIcons, IconType.Absorption.ordinal())) {
+				trayIcons.add(IconType.Absorption.ordinal(), setupTrayIcon(IconType.Absorption));
+			} else if (!isInNightmareZone() && indexExists(trayIcons, IconType.Absorption.ordinal())) {
+				removeTrayIcon(IconType.Absorption);
 			}
 		}
 
 		for (int i=0; i < trayIcons.size(); i++)
 		{
 			TrayIcon trayIcon = trayIcons.get(i);
+
 			switch (i)
 			{
 				case 0:
 					if(config.health()) {
-						trayIcon.setImage(createImage(i));
+						trayIcon.setImage(createImage(IconType.Health));
 					}
 					break;
 				case 1:
 					if(config.prayer()) {
-						trayIcon.setImage(createImage(i));
+						trayIcon.setImage(createImage(IconType.Prayer));
 					}
 					break;
 				case 2:
 					if(config.absorption()) {
-						trayIcon.setImage(createImage(i));
+						trayIcon.setImage(createImage(IconType.Absorption));
 					}
 					break;
 			}
 		}
 	}
 
-	private TrayIcon setupTrayIcon(int i)
+	private TrayIcon setupTrayIcon(IconType i)
 	{
 		if (!SystemTray.isSupported())
 		{
@@ -165,7 +167,6 @@ public class TrayIndicatorsPlugin extends Plugin
 
 		TrayIcon trayIcon = new TrayIcon(createImage(i));
 		trayIcon.setImageAutoSize(true);
-		//trayIcon.hashCode();
 
 		try
 		{
@@ -180,46 +181,44 @@ public class TrayIndicatorsPlugin extends Plugin
 		return trayIcon;
 	}
 
-	public BufferedImage createImage(int i){
+	public BufferedImage createImage(IconType type){
 		BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D graphics = image.createGraphics();
-		switch(i) {
-			case 0:
-				// Health
+
+		// Set the background color
+		switch(type) {
+			case Health:
 				graphics.setColor(config.healthColor());
 				break;
-			case 1:
-				// Prayer
+			case Prayer:
 				graphics.setColor(config.prayerColor());
 				break;
-			case 2:
+			case Absorption:
 				graphics.setColor(config.absorptionColor());
 				break;
 		}
 
-		//log.info( "Heigth: " + image.getHeight() + " Calc: " + Integer.toString(image.getHeight() * (client.getBoostedSkillLevel(Skill.PRAYER) / client.getRealSkillLevel(Skill.PRAYER))));
-		//graphics.fillRect ( 0, 0, image.getWidth(), (image.getHeight() * (client.getBoostedSkillLevel(Skill.PRAYER) / client.getRealSkillLevel(Skill.PRAYER))));
 		graphics.fillRect ( 0, 0, image.getWidth(), image.getHeight());
 
 		if(client.getLocalPlayer() != null) {
 			String text = "";
-			switch(i) {
-				case 0:
+			switch(type) {
+				case Health:
 					text = Integer.toString(client.getBoostedSkillLevel(Skill.HITPOINTS));
 					graphics.setColor(config.healthTxtColor());
 					break;
-				case 1:
+				case Prayer:
 					text = Integer.toString(client.getBoostedSkillLevel(Skill.PRAYER));
 					graphics.setColor(config.prayerTxtColor());
 					break;
-				case 2:
-					if(client.getVar(Varbits.NMZ_ABSORPTION) == 1000)
+				case Absorption:
+					if(client.getVarbitValue(Varbits.NMZ_ABSORPTION) == 1000)
 						graphics.setFont(new Font(graphics.getFont().getName(), Font.PLAIN, 8));
-					else if(client.getVar(Varbits.NMZ_ABSORPTION) >= 100)
+					else if(client.getVarbitValue(Varbits.NMZ_ABSORPTION) >= 100)
 						graphics.setFont(new Font(graphics.getFont().getName(), Font.PLAIN, 9));
 
 
-					text = Integer.toString(client.getVar(Varbits.NMZ_ABSORPTION));
+					text = Integer.toString(client.getVarbitValue(Varbits.NMZ_ABSORPTION));
 					graphics.setColor(config.absorptionTxtColor());
 					break;
 			}
@@ -239,21 +238,22 @@ public class TrayIndicatorsPlugin extends Plugin
 		return Arrays.equals(client.getMapRegions(), NMZ_MAP_REGION);
 	}
 
-	public boolean indexExists(final List list, final int index) {
+	public boolean indexExists(final List list, final int index)
+	{
 		return index >= 0 && index < list.size();
 	}
 
-	public void removeTrayIcon(int i){
-		if(!indexExists(trayIcons, i))
+	public void removeTrayIcon(IconType type){
+		if(!indexExists(trayIcons, type.ordinal()))
 		{
-			log.info("Index: '" + i + "' does not exist for trayIcons ;(");
+			log.info("Index: '" + type.ordinal() + "' (" + type + ") does not exist for trayIcons ;(");
 			return;
 		}
 
 		SystemTray systemTray = SystemTray.getSystemTray();
-		TrayIcon trayIcon = trayIcons.get(i);
+		TrayIcon trayIcon = trayIcons.get(type.ordinal());
 		systemTray.remove(trayIcon);
-		trayIcons.remove(i);
+		trayIcons.remove(type.ordinal());
 	}
 
 	public void removeAllTrayIcons(){
