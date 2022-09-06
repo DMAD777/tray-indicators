@@ -5,12 +5,12 @@ plugins {
 repositories {
 	mavenLocal()
 	maven {
-		url = 'http://repo.runelite.net'
+		url = 'https://repo.runelite.net'
 	}
 	mavenCentral()
 }
 
-def runeLiteVersion = '1.7.25'
+def runeLiteVersion = 'latest.release'
 
 dependencies {
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
@@ -24,7 +24,7 @@ dependencies {
 }
 
 group = 'com.TrayIndicators'
-version = '1.1'
+version = '1.1.1'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {

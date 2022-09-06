@@ -7,7 +7,7 @@ public class TrayIndicatorsPluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		//ExternalPluginManager.loadBuiltin(TrayIndicatorsPlugin.class);
+		ExternalPluginManager.loadBuiltin(TrayIndicatorsPlugin.class);
 		RuneLite.main(args);
 	}
 }
