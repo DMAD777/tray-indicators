@@ -92,7 +92,7 @@ public class TrayIndicatorsPlugin extends Plugin
 				(iconType == IconType.Absorption && !isInNightmareZone());
 	}
 
-	public boolean isInNightmareZone()
+	private boolean isInNightmareZone()
 	{
 		return Arrays.equals(client.getMapRegions(), NMZ_MAP_REGION);
 	}
