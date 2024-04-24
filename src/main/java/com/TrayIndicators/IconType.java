@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.runelite.api.Client;
 import net.runelite.api.Skill;
+import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
 
 import java.awt.Color;
@@ -29,6 +30,12 @@ public enum IconType
             TrayIndicatorsConfig::absorptionTxtColor,
             client -> Integer.toString(client.getVarbitValue(Varbits.NMZ_ABSORPTION)),
             TrayIndicatorsConfig::absorption
+    ),
+    Cannon(
+            TrayIndicatorsConfig::cannonColor,
+            TrayIndicatorsConfig::cannonTxtColor,
+            client -> Integer.toString(client.getVarpValue(VarPlayer.CANNON_AMMO)),
+            TrayIndicatorsConfig::cannon
     );
 
     private final ColorSupplier bgColorSupplier;

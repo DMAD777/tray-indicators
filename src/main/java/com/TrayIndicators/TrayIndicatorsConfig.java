@@ -140,4 +140,51 @@ public interface TrayIndicatorsConfig extends Config {
 		return Color.decode("#000000");
 	}
 	//endregion
+
+	//region Cannonballs Options
+	@ConfigSection(
+			name = "Cannon",
+			description = "",
+			position = 3
+	)
+	String cannonSection = "Cannon";
+
+	@ConfigItem(
+			keyName = "cannon",
+			name = "Enable Cannon",
+			description = "",
+			section = cannonSection,
+			position = 0
+	)
+	default boolean cannon()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+			keyName = "cannonColor",
+			name = "Background Color",
+			description = "",
+			section = cannonSection,
+			position = 1
+	)
+
+	default Color cannonColor()
+	{
+		return Color.decode("#797979");
+	}
+
+	@ConfigItem(
+			keyName = "cannonTxtColor",
+			name = "Text Color",
+			description = "",
+			section = cannonSection,
+			position = 2
+	)
+
+	default Color cannonTxtColor()
+	{
+		return Color.decode("#ffffff");
+	}
+	//endregion
 }
