@@ -4,6 +4,7 @@ import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
@@ -31,6 +32,8 @@ public class TrayIndicatorsPlugin extends Plugin
 
 	@Inject
 	private TrayIndicatorsConfig config;
+
+	private boolean cannonPlaced;
 
 	@Provides
 	TrayIndicatorsConfig getConfig(ConfigManager configManager)
@@ -73,6 +76,24 @@ public class TrayIndicatorsPlugin extends Plugin
 		updateAllTrayIcons();
 	}
 
+	@Subscribe
+	public void onChatMessage(ChatMessage event)
+	{
+		if (event.getType() != ChatMessageType.SPAM && event.getType() != ChatMessageType.GAMEMESSAGE)
+			return;
+
+		if (event.getMessage().equals("You add the furnace."))
+		{
+			cannonPlaced = true;
+		}
+		else if (event.getMessage().contains("You pick up the cannon")
+				|| event.getMessage().contains("Your cannon has decayed.")
+				|| event.getMessage().contains("Your cannon has been destroyed!"))
+		{
+			cannonPlaced = false;
+		}
+	}
+
 	public void updateAllTrayIcons()
 	{
 		trayIcons.forEach((iconType, icon) -> {
@@ -89,7 +110,8 @@ public class TrayIndicatorsPlugin extends Plugin
 	{
 		return client.getGameState() != GameState.LOGGED_IN ||
 				!icon.isActive() ||
-				(icon.type == IconType.Absorption && !isInNightmareZone());
+				(icon.type == IconType.Absorption && !isInNightmareZone()) ||
+				(icon.type == IconType.Cannon && !cannonPlaced);
 	}
 
 	private boolean isInNightmareZone()
