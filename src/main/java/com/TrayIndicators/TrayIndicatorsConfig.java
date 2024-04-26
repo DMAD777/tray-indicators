@@ -186,5 +186,18 @@ public interface TrayIndicatorsConfig extends Config {
 	{
 		return Color.decode("#ffffff");
 	}
+
+	@ConfigItem(
+			keyName = "cannonTxtDynamic",
+			name = "Text Color",
+			description = "",
+			section = cannonSection,
+			position = 2
+	)
+
+	default boolean cannonTxtDynamic()
+	{
+		return false;
+	}
 	//endregion
 }

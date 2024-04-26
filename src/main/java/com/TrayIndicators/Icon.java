@@ -73,7 +73,20 @@ public class Icon
             case Cannon:
                 value = client.getVarpValue(VarPlayer.CANNON_AMMO);
                 bgColor = config.cannonColor();
-                txtColor = config.cannonTxtColor();
+
+                if (config.cannonTxtDynamic()) {
+                    if (value > 15) {
+                        txtColor = Color.green;
+                    } else if (value > 5) {
+                        txtColor = Color.orange;
+                    } else {
+                        txtColor = Color.red;
+                    }
+                }
+                else {
+                    txtColor = config.cannonTxtColor();
+                }
+
                 break;
         }
 
