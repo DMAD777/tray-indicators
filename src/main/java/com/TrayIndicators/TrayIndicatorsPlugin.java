@@ -17,7 +17,7 @@ import java.util.*;
 @Slf4j
 @PluginDescriptor(
 		name = "Tray Indicators",
-		description = "Displays your hitpoints, prayer or absorption in the system tray.",
+		description = "Displays your hitpoints, prayer, absorption or cannonballs in the system tray.",
 		tags = {"notifications"}
 )
 public class TrayIndicatorsPlugin extends Plugin
@@ -43,7 +43,7 @@ public class TrayIndicatorsPlugin extends Plugin
 	{
 		if (trayIcons.isEmpty())
 			for(IconType type : IconType.values())
-				trayIcons.put(type, new Icon());
+				trayIcons.put(type, new Icon(type, client, config));
 	}
 
 	@Override
@@ -76,20 +76,20 @@ public class TrayIndicatorsPlugin extends Plugin
 	public void updateAllTrayIcons()
 	{
 		trayIcons.forEach((iconType, icon) -> {
-			if (shouldRemoveIcon(iconType)) {
+			if (shouldRemoveIcon(icon)) {
 				icon.removeIcon();
 				return;
 			}
 
-			icon.updateIcon(iconType.getTxt(client), iconType.getBgColor(config), iconType.getTxtColor(config));
+			icon.updateIcon();
 		});
 	}
 
-	private boolean shouldRemoveIcon(IconType iconType)
+	private boolean shouldRemoveIcon(Icon icon)
 	{
 		return client.getGameState() != GameState.LOGGED_IN ||
-				!iconType.isActive(config) ||
-				(iconType == IconType.Absorption && !isInNightmareZone());
+				!icon.isActive() ||
+				(icon.type == IconType.Absorption && !isInNightmareZone());
 	}
 
 	private boolean isInNightmareZone()
