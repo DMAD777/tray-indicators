@@ -21,7 +21,7 @@ public interface TrayIndicatorsConfig extends Config {
 	@ConfigItem(
 			keyName = "health",
 			name = "Enable Hitpoints",
-			description = "",
+			description = "Shows the amount of hitpoints left.",
 			section = healthSection,
 			position = 0
 	)
@@ -60,7 +60,7 @@ public interface TrayIndicatorsConfig extends Config {
 	@ConfigItem(
 			keyName = "prayer",
 			name = "Enable Prayer",
-			description = "",
+			description = "Shows the amount of prayer points left.",
 			section = prayerSection,
 			position = 0
 	)
@@ -105,7 +105,7 @@ public interface TrayIndicatorsConfig extends Config {
 	@ConfigItem(
 			keyName = "absorption",
 			name = "Enable Absorption",
-			description = "",
+			description = "Shows the amount of absorption points left while in Nightmare Zone.",
 			section = absorptionSection,
 			position = 0
 	)
@@ -152,7 +152,7 @@ public interface TrayIndicatorsConfig extends Config {
 	@ConfigItem(
 			keyName = "cannon",
 			name = "Enable Cannon",
-			description = "",
+			description = "Shows the amount of cannonballs left in your cannon.",
 			section = cannonSection,
 			position = 0
 	)
@@ -189,10 +189,10 @@ public interface TrayIndicatorsConfig extends Config {
 
 	@ConfigItem(
 			keyName = "cannonTxtDynamic",
-			name = "Text Color",
-			description = "",
+			name = "Dynamic Text Color",
+			description = "Changes the text color based on the amount of cannonballs left.",
 			section = cannonSection,
-			position = 2
+			position = 3
 	)
 
 	default boolean cannonTxtDynamic()
