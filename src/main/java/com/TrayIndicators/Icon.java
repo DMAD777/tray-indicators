@@ -1,6 +1,10 @@
 package com.TrayIndicators;
 
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
+import net.runelite.api.Skill;
+import net.runelite.api.VarPlayer;
+import net.runelite.api.Varbits;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -8,20 +12,28 @@ import java.awt.image.BufferedImage;
 @Slf4j
 public class Icon
 {
+    public final IconType type;
     private TrayIcon trayIcon;
 
-    public Icon()
+    private final Client client;
+    private final TrayIndicatorsConfig config;
+
+    public Icon(IconType type, Client client, TrayIndicatorsConfig config)
     {
+        this.type = type;
+        this.client = client;
+        this.config = config;
+
         if (!SystemTray.isSupported())
             log.error("System tray is not supported");
     }
 
-    private void createIcon(String text, Color bgColor, Color txtColor)
+    private void createIcon(int value, Color bgColor, Color txtColor)
     {
         if (trayIcon != null)
             removeIcon();
 
-        trayIcon = new TrayIcon(createImage(text, bgColor, txtColor));
+        trayIcon = new TrayIcon(createImage(value, bgColor, txtColor));
         trayIcon.setImageAutoSize(true);
 
         try
@@ -34,16 +46,45 @@ public class Icon
         }
     }
 
-    public void updateIcon(String text, Color bgColor, Color txtColor)
+    public void updateIcon()
     {
+        // Default values
+        Color bgColor = Color.WHITE;
+        Color txtColor = Color.BLACK;
+        int value = 0;
+
+        switch (type)
+        {
+            case Health:
+                value = client.getBoostedSkillLevel(Skill.HITPOINTS);
+                bgColor = config.healthColor();
+                txtColor = config.healthTxtColor();
+                break;
+            case Prayer:
+                value = client.getBoostedSkillLevel(Skill.PRAYER);
+                bgColor = config.prayerColor();
+                txtColor = config.prayerTxtColor();
+                break;
+            case Absorption:
+                value = client.getVarbitValue(Varbits.NMZ_ABSORPTION);
+                bgColor = config.absorptionColor();
+                txtColor = config.absorptionTxtColor();
+                break;
+            case Cannon:
+                value = client.getVarpValue(VarPlayer.CANNON_AMMO);
+                bgColor = config.cannonColor();
+                txtColor = config.cannonTxtColor();
+                break;
+        }
+
         if (trayIcon == null)
         {
-            createIcon(text, bgColor, txtColor);
+            createIcon(value, bgColor, txtColor);
             return;
         }
 
         trayIcon.getImage().flush();
-        trayIcon.setImage(createImage(text, bgColor, txtColor));
+        trayIcon.setImage(createImage(value, bgColor, txtColor));
     }
 
     public void removeIcon()
@@ -57,9 +98,10 @@ public class Icon
         trayIcon = null;
     }
 
-    private BufferedImage createImage(String text, Color bgColor, Color txtColor)
+    private BufferedImage createImage(int value, Color bgColor, Color txtColor)
     {
         int size = 16;
+        String text = Integer.toString(value);
 
         BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D graphics = image.createGraphics();
@@ -82,5 +124,22 @@ public class Icon
         graphics.dispose();
 
         return image;
+    }
+
+    public boolean isActive()
+    {
+        switch (type)
+        {
+            case Health:
+                return config.health();
+            case Prayer:
+                return config.prayer();
+            case Absorption:
+                return config.absorption();
+            case Cannon:
+                return config.cannon();
+        }
+
+        return false;
     }
 }
