@@ -23,9 +23,6 @@ public class Icon
         this.type = type;
         this.client = client;
         this.config = config;
-
-        if (!SystemTray.isSupported())
-            log.error("System tray is not supported");
     }
 
     private void createIcon(int value, Color bgColor, Color txtColor)

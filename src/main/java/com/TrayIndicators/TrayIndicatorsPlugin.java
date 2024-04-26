@@ -13,6 +13,7 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 
+import java.awt.*;
 import java.util.*;
 
 @Slf4j
@@ -44,6 +45,12 @@ public class TrayIndicatorsPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
+		if (!SystemTray.isSupported())
+		{
+			log.error("System tray is not supported.");
+			return;
+		}
+
 		if (trayIcons.isEmpty())
 			for(IconType type : IconType.values())
 				trayIcons.put(type, new Icon(type, client, config));
