@@ -1,7 +1,14 @@
 # Tray Indicators
-Displays your hitpoints, prayer or absorption in the system tray.
+Displays icons the system tray with information about your character.
 
-Icons can be disabled individually.
-Colors are fully customizable.
+Displays the following information:
+* Hitpoints
+* Prayer
+* Absorption in NMZ
+* Amount of cannonballs in your cannon
+
+
+* Icons can be disabled individually.
+* Background and text colors are fully customizable.
 
 ![In-game screenshot](https://i.imgur.com/Zkd6zmC.png)
