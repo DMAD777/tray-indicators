@@ -24,11 +24,6 @@
  */
 package com.trayindicators.icons;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
 public enum IconType
 {
 	Health,
