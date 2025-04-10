@@ -23,8 +23,8 @@ dependencies {
 	testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
-group = 'com.TrayIndicators'
-version = '1.3'
+group = 'com.trayindicators'
+version = '1.4'
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
