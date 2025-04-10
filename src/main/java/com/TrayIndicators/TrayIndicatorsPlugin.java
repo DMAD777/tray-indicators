@@ -25,12 +25,10 @@
 package com.trayindicators;
 
 import com.google.inject.Provides;
-import com.trayindicators.icons.Icon;
-import com.trayindicators.icons.IconType;
+import com.trayindicators.icons.*;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
@@ -50,8 +48,6 @@ import java.util.*;
 )
 public class TrayIndicatorsPlugin extends Plugin
 {
-	private static final int[] NMZ_MAP_REGION = {9033};
-
 	private final Map<IconType, Icon> trayIcons = new HashMap<>();
 
 	@Inject
@@ -59,8 +55,6 @@ public class TrayIndicatorsPlugin extends Plugin
 
 	@Inject
 	private TrayIndicatorsConfig config;
-
-	private boolean cannonPlaced;
 
 	@Provides
 	TrayIndicatorsConfig getConfig(ConfigManager configManager)
@@ -79,7 +73,10 @@ public class TrayIndicatorsPlugin extends Plugin
 
 		if (trayIcons.isEmpty())
 		{
-			// Todo: Add each icon type to the trayIcons map
+			trayIcons.put(IconType.Health, new HealthIcon(client, config));
+			trayIcons.put(IconType.Prayer, new PrayerIcon(client, config));
+			trayIcons.put(IconType.Absorption, new AbsorptionIcon(client, config));
+			trayIcons.put(IconType.Cannon, new CannonIcon(client, config));
 		}
 	}
 
@@ -112,49 +109,8 @@ public class TrayIndicatorsPlugin extends Plugin
 		updateAllTrayIcons();
 	}
 
-	@Subscribe
-	public void onChatMessage(ChatMessage event)
-	{
-		if (event.getType() != ChatMessageType.SPAM && event.getType() != ChatMessageType.GAMEMESSAGE)
-		{
-			return;
-		}
-
-		if (event.getMessage().equals("You add the furnace."))
-		{
-			cannonPlaced = true;
-		}
-		else if (event.getMessage().contains("You pick up the cannon")
-			|| event.getMessage().contains("Your cannon has decayed.")
-			|| event.getMessage().contains("Your cannon has been destroyed!"))
-		{
-			cannonPlaced = false;
-		}
-	}
-
 	public void updateAllTrayIcons()
 	{
-		trayIcons.forEach((iconType, icon) -> {
-			if (shouldRemoveIcon(icon))
-			{
-				icon.removeIcon();
-				return;
-			}
-
-			icon.updateIcon();
-		});
-	}
-
-	private boolean shouldRemoveIcon(Icon icon)
-	{
-		return client.getGameState() != GameState.LOGGED_IN ||
-			!icon.isActive() ||
-			(icon.type == IconType.Absorption && !isInNightmareZone()) ||
-			(icon.type == IconType.Cannon && !cannonPlaced);
-	}
-
-	private boolean isInNightmareZone()
-	{
-		return Arrays.equals(client.getMapRegions(), NMZ_MAP_REGION);
+		trayIcons.forEach((iconType, icon) -> icon.updateIcon());
 	}
 }
