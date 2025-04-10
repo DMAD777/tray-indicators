@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2025, DMAD777 <https://github.com/DMAD777>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package com.TrayIndicators;
 
 import net.runelite.client.config.Config;
@@ -8,22 +32,23 @@ import net.runelite.client.config.ConfigSection;
 import java.awt.Color;
 
 @ConfigGroup("Tray Indicators")
-public interface TrayIndicatorsConfig extends Config {
+public interface TrayIndicatorsConfig extends Config
+{
 
 	//region Health Options
 	@ConfigSection(
-			name = "Hitpoints",
-			description = "",
-			position = 0
+		name = "Hitpoints",
+		description = "",
+		position = 0
 	)
 	String healthSection = "Hitpoints";
 
 	@ConfigItem(
-			keyName = "health",
-			name = "Enable Hitpoints",
-			description = "Shows the amount of hitpoints left.",
-			section = healthSection,
-			position = 0
+		keyName = "health",
+		name = "Enable Hitpoints",
+		description = "Shows the amount of hitpoints left.",
+		section = healthSection,
+		position = 0
 	)
 	default boolean health()
 	{
@@ -31,38 +56,44 @@ public interface TrayIndicatorsConfig extends Config {
 	}
 
 	@ConfigItem(
-			keyName = "healthColor",
-			name = "Background Color",
-			description = "",
-			section = healthSection,
-			position = 1
+		keyName = "healthColor",
+		name = "Background Color",
+		description = "",
+		section = healthSection,
+		position = 1
 	)
-	default Color healthColor() { return Color.decode("#ff0000"); }
+	default Color healthColor()
+	{
+		return Color.decode("#ff0000");
+	}
 
 	@ConfigItem(
-			keyName = "healthTxtColor",
-			name = "Text Color",
-			description = "",
-			section = healthSection,
-			position = 2
+		keyName = "healthTxtColor",
+		name = "Text Color",
+		description = "",
+		section = healthSection,
+		position = 2
 	)
-	default Color healthTxtColor() { return Color.decode("#ffffff"); }
+	default Color healthTxtColor()
+	{
+		return Color.decode("#ffffff");
+	}
 	//endregion
 
 	//region Prayer Options
 	@ConfigSection(
-			name = "Prayer",
-			description = "",
-			position = 1
+		name = "Prayer",
+		description = "",
+		position = 1
 	)
 	String prayerSection = "Prayer";
 
 	@ConfigItem(
-			keyName = "prayer",
-			name = "Enable Prayer",
-			description = "Shows the amount of prayer points left.",
-			section = prayerSection,
-			position = 0
+		keyName = "prayer",
+		name = "Enable Prayer",
+		description = "Shows the amount of prayer points left.",
+		section = prayerSection,
+		position = 0
 	)
 	default boolean prayer()
 	{
@@ -70,11 +101,11 @@ public interface TrayIndicatorsConfig extends Config {
 	}
 
 	@ConfigItem(
-			keyName = "prayerColor",
-			name = "Background Color",
-			description = "",
-			section = prayerSection,
-			position = 1
+		keyName = "prayerColor",
+		name = "Background Color",
+		description = "",
+		section = prayerSection,
+		position = 1
 	)
 	default Color prayerColor()
 	{
@@ -82,11 +113,11 @@ public interface TrayIndicatorsConfig extends Config {
 	}
 
 	@ConfigItem(
-			keyName = "prayerTxtColor",
-			name = "Text Color",
-			description = "",
-			section = prayerSection,
-			position = 2
+		keyName = "prayerTxtColor",
+		name = "Text Color",
+		description = "",
+		section = prayerSection,
+		position = 2
 	)
 	default Color prayerTxtColor()
 	{
@@ -96,18 +127,18 @@ public interface TrayIndicatorsConfig extends Config {
 
 	//region Absorption Options
 	@ConfigSection(
-			name = "Absorption",
-			description = "",
-			position = 2
+		name = "Absorption",
+		description = "",
+		position = 2
 	)
 	String absorptionSection = "Absorption";
 
 	@ConfigItem(
-			keyName = "absorption",
-			name = "Enable Absorption",
-			description = "Shows the amount of absorption points left while in Nightmare Zone.",
-			section = absorptionSection,
-			position = 0
+		keyName = "absorption",
+		name = "Enable Absorption",
+		description = "Shows the amount of absorption points left while in Nightmare Zone.",
+		section = absorptionSection,
+		position = 0
 	)
 	default boolean absorption()
 	{
@@ -115,11 +146,11 @@ public interface TrayIndicatorsConfig extends Config {
 	}
 
 	@ConfigItem(
-			keyName = "absorptionColor",
-			name = "Background Color",
-			description = "",
-			section = absorptionSection,
-			position = 1
+		keyName = "absorptionColor",
+		name = "Background Color",
+		description = "",
+		section = absorptionSection,
+		position = 1
 	)
 
 	default Color absorptionColor()
@@ -128,11 +159,11 @@ public interface TrayIndicatorsConfig extends Config {
 	}
 
 	@ConfigItem(
-			keyName = "absorptionTxtColor",
-			name = "Text Color",
-			description = "",
-			section = absorptionSection,
-			position = 2
+		keyName = "absorptionTxtColor",
+		name = "Text Color",
+		description = "",
+		section = absorptionSection,
+		position = 2
 	)
 
 	default Color absorptionTxtColor()
@@ -143,18 +174,18 @@ public interface TrayIndicatorsConfig extends Config {
 
 	//region Cannonballs Options
 	@ConfigSection(
-			name = "Cannon",
-			description = "",
-			position = 3
+		name = "Cannon",
+		description = "",
+		position = 3
 	)
 	String cannonSection = "Cannon";
 
 	@ConfigItem(
-			keyName = "cannon",
-			name = "Enable Cannon",
-			description = "Shows the amount of cannonballs left in your cannon.",
-			section = cannonSection,
-			position = 0
+		keyName = "cannon",
+		name = "Enable Cannon",
+		description = "Shows the amount of cannonballs left in your cannon.",
+		section = cannonSection,
+		position = 0
 	)
 	default boolean cannon()
 	{
@@ -162,11 +193,11 @@ public interface TrayIndicatorsConfig extends Config {
 	}
 
 	@ConfigItem(
-			keyName = "cannonColor",
-			name = "Background Color",
-			description = "",
-			section = cannonSection,
-			position = 1
+		keyName = "cannonColor",
+		name = "Background Color",
+		description = "",
+		section = cannonSection,
+		position = 1
 	)
 
 	default Color cannonColor()
@@ -175,11 +206,11 @@ public interface TrayIndicatorsConfig extends Config {
 	}
 
 	@ConfigItem(
-			keyName = "cannonTxtColor",
-			name = "Text Color",
-			description = "",
-			section = cannonSection,
-			position = 2
+		keyName = "cannonTxtColor",
+		name = "Text Color",
+		description = "",
+		section = cannonSection,
+		position = 2
 	)
 
 	default Color cannonTxtColor()
@@ -188,11 +219,11 @@ public interface TrayIndicatorsConfig extends Config {
 	}
 
 	@ConfigItem(
-			keyName = "cannonTxtDynamic",
-			name = "Dynamic Text Color",
-			description = "Changes the text color based on the amount of cannonballs left.",
-			section = cannonSection,
-			position = 3
+		keyName = "cannonTxtDynamic",
+		name = "Dynamic Text Color",
+		description = "Changes the text color based on the amount of cannonballs left.",
+		section = cannonSection,
+		position = 3
 	)
 
 	default boolean cannonTxtDynamic()
