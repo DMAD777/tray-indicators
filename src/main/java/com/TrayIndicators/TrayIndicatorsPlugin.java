@@ -25,6 +25,8 @@
 package com.trayindicators;
 
 import com.google.inject.Provides;
+import com.trayindicators.icons.Icon;
+import com.trayindicators.icons.IconType;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
