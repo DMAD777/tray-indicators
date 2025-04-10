@@ -79,10 +79,7 @@ public class TrayIndicatorsPlugin extends Plugin
 
 		if (trayIcons.isEmpty())
 		{
-			for (IconType type : IconType.values())
-			{
-				trayIcons.put(type, new Icon(type, client, config));
-			}
+			// Todo: Add each icon type to the trayIcons map
 		}
 	}
 

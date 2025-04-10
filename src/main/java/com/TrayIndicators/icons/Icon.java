@@ -27,21 +27,20 @@ package com.trayindicators.icons;
 import com.trayindicators.TrayIndicatorsConfig;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-import net.runelite.api.Skill;
-import net.runelite.api.VarPlayer;
-import net.runelite.api.Varbits;
+import net.runelite.api.GameState;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 @Slf4j
-public class Icon
+public abstract class Icon
 {
 	public final IconType type;
-	private TrayIcon trayIcon;
 
-	private final Client client;
-	private final TrayIndicatorsConfig config;
+	protected final Client client;
+	protected final TrayIndicatorsConfig config;
+
+	private TrayIcon trayIcon;
 
 	public Icon(IconType type, Client client, TrayIndicatorsConfig config)
 	{
@@ -72,63 +71,22 @@ public class Icon
 
 	public void updateIcon()
 	{
-		// Default values
-		Color bgColor = Color.WHITE;
-		Color txtColor = Color.BLACK;
-		int value = 0;
-
-		switch (type)
+		if (client.getGameState() != GameState.LOGGED_IN || !isActive())
 		{
-			case Health:
-				value = client.getBoostedSkillLevel(Skill.HITPOINTS);
-				bgColor = config.healthColor();
-				txtColor = config.healthTxtColor();
-				break;
-			case Prayer:
-				value = client.getBoostedSkillLevel(Skill.PRAYER);
-				bgColor = config.prayerColor();
-				txtColor = config.prayerTxtColor();
-				break;
-			case Absorption:
-				value = client.getVarbitValue(Varbits.NMZ_ABSORPTION);
-				bgColor = config.absorptionColor();
-				txtColor = config.absorptionTxtColor();
-				break;
-			case Cannon:
-				value = client.getVarpValue(VarPlayer.CANNON_AMMO);
-				bgColor = config.cannonColor();
-
-				if (config.cannonTxtDynamic())
-				{
-					if (value > 15)
-					{
-						txtColor = Color.green;
-					}
-					else if (value > 5)
-					{
-						txtColor = Color.orange;
-					}
-					else
-					{
-						txtColor = Color.red;
-					}
-				}
-				else
-				{
-					txtColor = config.cannonTxtColor();
-				}
-
-				break;
-		}
-
-		if (trayIcon == null)
-		{
-			createIcon(value, bgColor, txtColor);
+			removeIcon();
 			return;
 		}
 
-		trayIcon.getImage().flush();
-		trayIcon.setImage(createImage(value, bgColor, txtColor));
+		IconData data = getIconData();
+		if (trayIcon == null)
+		{
+			createIcon(data.value, data.bgColor, data.txtColor);
+		}
+		else
+		{
+			trayIcon.getImage().flush();
+			trayIcon.setImage(createImage(data.value, data.bgColor, data.txtColor));
+		}
 	}
 
 	public void removeIcon()
@@ -170,20 +128,7 @@ public class Icon
 		return image;
 	}
 
-	public boolean isActive()
-	{
-		switch (type)
-		{
-			case Health:
-				return config.health();
-			case Prayer:
-				return config.prayer();
-			case Absorption:
-				return config.absorption();
-			case Cannon:
-				return config.cannon();
-		}
+	public abstract IconData getIconData();
 
-		return false;
-	}
+	public abstract boolean isActive();
 }
