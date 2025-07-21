@@ -24,12 +24,12 @@
  */
 package com.trayindicators;
 
+import java.awt.Color;
+
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
-
-import java.awt.Color;
 
 @ConfigGroup("Tray Indicators")
 public interface TrayIndicatorsConfig extends Config
@@ -229,6 +229,107 @@ public interface TrayIndicatorsConfig extends Config
 	default boolean cannonTxtDynamic()
 	{
 		return false;
+	}
+	//endregion
+
+	//region Inventory Options
+	@ConfigSection(
+		name = "Inventory",
+		description = "",
+		position = 4
+	)
+
+	String inventorySection = "Inventory";
+
+	@ConfigItem(
+		keyName = "inventory",
+		name = "Enable Inventory Count",
+		description = "Shows the amount of filled inventory slots.",
+		section = inventorySection,
+		position = 0
+	)
+
+	default boolean inventory()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "inventoryColor",
+		name = "Background Color",
+		description = "",
+		section = inventorySection,
+		position = 1
+	)
+
+	default Color inventoryColor()
+	{
+		return Color.decode("#845020");
+	}
+
+	@ConfigItem(
+		keyName = "inventoryTxtColor",
+		name = "Text Color",
+		description = "",
+		section = inventorySection,
+		position = 2
+	)
+
+	default Color inventoryTxtColor()
+	{
+		return Color.decode("#ffffff");
+	}
+
+	@ConfigItem(
+		keyName = "inventoryThreshold",
+		name = "Count Threshold",
+		description = "The amount of filled inventory slots at which the text color changes.",
+		section = inventorySection,
+		position = 3
+	)
+
+	default int inventoryThreshold()
+	{
+		return 20;
+	}
+
+	@ConfigItem(
+		keyName = "inventoryThresholdTxtColor",
+		name = "Threshold Text Color",
+		description = "The amount of filled inventory slots at which the text color changes.",
+		section = inventorySection,
+		position = 4
+	)
+
+	default Color inventoryTxtThresholdColor()
+	{
+		return Color.decode("#ff6a00");
+	}
+
+	@ConfigItem(
+		keyName = "inventoryFullTxtColor",
+		name = "Inventory Full Text Color",
+		description = "The color of the text when the inventory is full.",
+		section = inventorySection,
+		position = 5
+	)
+
+	default Color inventoryTxtFullColor()
+	{
+		return Color.decode("#00ff26");
+	}
+
+	@ConfigItem(
+		keyName = "inventoryEmptyTxtColor",
+		name = "Inventory Empty Text Color",
+		description = "The color of the text when the inventory is empty.",
+		section = inventorySection,
+		position = 6
+	)
+
+	default Color inventoryTxtEmptyColor()
+	{
+		return Color.decode("#ff0000");
 	}
 	//endregion
 }

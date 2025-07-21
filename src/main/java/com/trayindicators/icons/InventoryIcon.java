@@ -24,11 +24,63 @@
  */
 package com.trayindicators.icons;
 
-public enum IconType
+import com.trayindicators.TrayIndicatorsConfig;
+import java.awt.Color;
+import java.util.Arrays;
+import net.runelite.api.Client;
+import net.runelite.api.ItemContainer;
+import net.runelite.api.InventoryID;
+
+public class InventoryIcon extends Icon
 {
-	Health,
-	Prayer,
-	Absorption,
-	Cannon,
-	Inventory
+	public InventoryIcon(Client client, TrayIndicatorsConfig config)
+	{
+		super(IconType.Inventory, client, config);
+	}
+
+	@Override
+	public IconData getIconData()
+	{
+		int filledSlots = getFilledInventorySlots();
+		Color txtColor = config.inventoryTxtColor();
+
+		if (filledSlots <= 0)
+		{
+			txtColor = config.inventoryTxtEmptyColor();
+		}
+		else if (filledSlots >= 28)
+		{
+			txtColor = config.inventoryTxtFullColor();
+		}
+		else if (filledSlots >= config.inventoryThreshold())
+		{
+			txtColor = config.inventoryTxtThresholdColor();
+		}
+
+		return new IconData(
+			filledSlots,
+			config.inventoryColor(),
+			txtColor
+		);
+	}
+
+	@Override
+	public boolean isActive()
+	{
+		return config.inventory();
+	}
+
+	private int getFilledInventorySlots()
+	{
+		ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
+
+		if (inventory == null)
+		{
+			return 0;
+		}
+
+		return (int)Arrays.stream(inventory.getItems())
+			.filter(item -> item.getQuantity() > 0)
+			.count();
+	}
 }

@@ -77,6 +77,7 @@ public class TrayIndicatorsPlugin extends Plugin
 			trayIcons.put(IconType.Prayer, new PrayerIcon(client, config));
 			trayIcons.put(IconType.Absorption, new AbsorptionIcon(client, config));
 			trayIcons.put(IconType.Cannon, new CannonIcon(client, config));
+			trayIcons.put(IconType.Inventory, new InventoryIcon(client, config));
 		}
 	}
 
