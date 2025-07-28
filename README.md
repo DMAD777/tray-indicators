@@ -8,8 +8,8 @@ Displays the following information:
 * Amount of cannonballs in your cannon
 * Amount of items in your inventory
 
-
+Customizable options:
 * Icons can be disabled individually.
 * Background and text colors are fully customizable.
 
-![In-game screenshot](https://i.imgur.com/Zkd6zmC.png)
+![In-game screenshot](screenshot.png)
