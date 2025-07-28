@@ -6,6 +6,7 @@ Displays the following information:
 * Prayer
 * Absorption in NMZ
 * Amount of cannonballs in your cannon
+* Amount of items in your inventory
 
 
 * Icons can be disabled individually.
