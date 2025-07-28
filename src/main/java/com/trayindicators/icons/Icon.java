@@ -80,7 +80,7 @@ public abstract class Icon
 
 		IconData data = getIconData();
 
-		if (data.equals(lastIconData))
+		if (trayIcon != null && data.equals(lastIconData))
 		{
 			return;
 		}
