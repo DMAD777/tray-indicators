@@ -24,12 +24,30 @@
  */
 package com.trayindicators.icons;
 
-public enum IconType
+import com.trayindicators.TrayIndicatorsConfig;
+import net.runelite.api.Client;
+import net.runelite.api.VarPlayer;
+
+public class SpecIcon extends Icon
 {
-	Health,
-	Prayer,
-	Absorption,
-	Cannon,
-	Inventory,
-	Spec,
+	public SpecIcon(Client client, TrayIndicatorsConfig config)
+	{
+		super(IconType.Spec, client, config);
+	}
+
+	@Override
+	public IconData getIconData()
+	{
+		return new IconData(
+			client.getVarpValue(VarPlayer.SPECIAL_ATTACK_PERCENT) / 10,
+			config.specColor(),
+			config.specTxtColor()
+		);
+	}
+
+	@Override
+	public boolean isActive()
+	{
+		return config.spec();
+	}
 }
