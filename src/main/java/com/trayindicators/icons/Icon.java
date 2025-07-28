@@ -31,6 +31,10 @@ import net.runelite.api.GameState;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.client.events.ConfigChanged;
 
 @Slf4j
 public abstract class Icon
@@ -68,6 +72,27 @@ public abstract class Icon
 		{
 			log.error("Unable to add system tray icon.", ex);
 		}
+	}
+
+	public void onGameTick(GameTick event)
+	{
+		updateIcon();
+	}
+
+	public void onGameStateChanged(GameStateChanged event)
+	{
+		updateIcon();
+	}
+
+	public void onConfigChanged(ConfigChanged event)
+	{
+		updateIcon();
+	}
+
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		// Default implementation does nothing
+		// Subclasses can override this method if needed
 	}
 
 	public void updateIcon()
@@ -109,7 +134,7 @@ public abstract class Icon
 		trayIcon = null;
 	}
 
-	private BufferedImage createImage(int value, Color bgColor, Color txtColor)
+	protected BufferedImage createImage(int value, Color bgColor, Color txtColor)
 	{
 		int size = 16;
 		String text = Integer.toString(value);

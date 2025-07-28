@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -91,13 +92,19 @@ public class TrayIndicatorsPlugin extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		updateAllTrayIcons();
+		trayIcons.forEach((iconType, icon) -> icon.onGameTick(event));
 	}
 
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
-		updateAllTrayIcons();
+		trayIcons.forEach((iconType, icon) -> icon.onGameStateChanged(event));
+	}
+
+	@Subscribe
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		trayIcons.forEach((iconType, icon) -> icon.onItemContainerChanged(event));
 	}
 
 	@Subscribe
@@ -108,11 +115,6 @@ public class TrayIndicatorsPlugin extends Plugin
 			return;
 		}
 
-		updateAllTrayIcons();
-	}
-
-	public void updateAllTrayIcons()
-	{
-		trayIcons.forEach((iconType, icon) -> icon.updateIcon());
+		trayIcons.forEach((iconType, icon) -> icon.onConfigChanged(event));
 	}
 }
