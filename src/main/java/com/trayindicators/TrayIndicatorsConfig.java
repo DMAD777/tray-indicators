@@ -384,7 +384,7 @@ public interface TrayIndicatorsConfig extends Config
 	@ConfigItem(
 		keyName = "specProgress",
 		name = "Enable Special Attack Progress",
-		description = "",
+		description = "Changes the icon background to a progress bar that shows how long it will take to charge the special attack bar.",
 		section = specSection,
 		position = 3
 	)
@@ -397,7 +397,7 @@ public interface TrayIndicatorsConfig extends Config
 	@ConfigItem(
 		keyName = "specProgressColor",
 		name = "Special Attack Progress Color",
-		description = "",
+		description = "The color of the special attack progress bar.",
 		section = specSection,
 		position = 4
 	)
