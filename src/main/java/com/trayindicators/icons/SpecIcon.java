@@ -46,7 +46,6 @@ public class SpecIcon extends Icon
 
 	private int ticksSinceSpecRegen;
 	private boolean wearingLightbearer;
-	private boolean cacheImage = true;
 
 	public SpecIcon(Client client, TrayIndicatorsConfig config)
 	{
@@ -61,17 +60,6 @@ public class SpecIcon extends Icon
 			config.specColor(),
 			config.specTxtColor()
 		);
-	}
-
-	@Override
-	public void updateIcon()
-	{
-		if (!cacheImage)
-		{
-			lastIconData = null;
-		}
-
-		super.updateIcon();
 	}
 
 	@Override

@@ -46,6 +46,7 @@ public abstract class Icon
 
 	private TrayIcon trayIcon;
 	protected IconData lastIconData;
+	protected boolean cacheImage = true;
 
 	public Icon(IconType type, Client client, TrayIndicatorsConfig config)
 	{
@@ -108,7 +109,7 @@ public abstract class Icon
 
 		IconData data = getIconData();
 
-		if (trayIcon != null && data.equals(lastIconData))
+		if (cacheImage && trayIcon != null && data.equals(lastIconData))
 		{
 			return;
 		}
@@ -123,7 +124,10 @@ public abstract class Icon
 			trayIcon.setImage(createImage(data.value, data.bgColor, data.txtColor));
 		}
 
-		lastIconData = data;
+		if (cacheImage)
+		{
+			lastIconData = data;
+		}
 	}
 
 	public void removeIcon()
