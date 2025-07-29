@@ -72,6 +72,12 @@ public class InventoryIcon extends Icon
 
 	private int getFilledInventorySlots()
 	{
+		// Make sure we are on the client thread
+		if (!client.isClientThread())
+		{
+			return 0;
+		}
+
 		ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
 
 		if (inventory == null)
