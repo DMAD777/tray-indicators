@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -43,7 +44,7 @@ import java.util.*;
 @Slf4j
 @PluginDescriptor(
 	name = "Tray Indicators",
-	description = "Displays your hitpoints, prayer, absorption or cannonballs in the system tray.",
+	description = "Displays your hitpoints, prayer, absorption, special attack, cannon ammo or inventory count in the system tray.",
 	tags = {"notifications"}
 )
 public class TrayIndicatorsPlugin extends Plugin
@@ -78,6 +79,7 @@ public class TrayIndicatorsPlugin extends Plugin
 			trayIcons.put(IconType.Absorption, new AbsorptionIcon(client, config));
 			trayIcons.put(IconType.Cannon, new CannonIcon(client, config));
 			trayIcons.put(IconType.Inventory, new InventoryIcon(client, config));
+			trayIcons.put(IconType.Spec, new SpecIcon(client, config));
 		}
 	}
 
@@ -90,13 +92,19 @@ public class TrayIndicatorsPlugin extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		updateAllTrayIcons();
+		trayIcons.forEach((iconType, icon) -> icon.onGameTick(event));
 	}
 
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
-		updateAllTrayIcons();
+		trayIcons.forEach((iconType, icon) -> icon.onGameStateChanged(event));
+	}
+
+	@Subscribe
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		trayIcons.forEach((iconType, icon) -> icon.onItemContainerChanged(event));
 	}
 
 	@Subscribe
@@ -107,11 +115,6 @@ public class TrayIndicatorsPlugin extends Plugin
 			return;
 		}
 
-		updateAllTrayIcons();
-	}
-
-	public void updateAllTrayIcons()
-	{
-		trayIcons.forEach((iconType, icon) -> icon.updateIcon());
+		trayIcons.forEach((iconType, icon) -> icon.onConfigChanged(event));
 	}
 }

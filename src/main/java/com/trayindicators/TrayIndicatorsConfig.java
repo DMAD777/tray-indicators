@@ -332,4 +332,79 @@ public interface TrayIndicatorsConfig extends Config
 		return Color.decode("#ff0000");
 	}
 	//endregion
+
+	//region Special Attack Options
+	@ConfigSection(
+		name = "Special Attack",
+		description = "",
+		position = 5
+	)
+
+	String specSection = "Special Attack";
+
+	@ConfigItem(
+		keyName = "spec",
+		name = "Enable Special Attack",
+		description = "Shows the amount of special attack energy left.",
+		section = specSection,
+		position = 0
+	)
+
+	default boolean spec()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "specColor",
+		name = "Background Color",
+		description = "",
+		section = specSection,
+		position = 1
+	)
+
+	default Color specColor()
+	{
+		return Color.decode("#1b444f");
+	}
+
+	@ConfigItem(
+		keyName = "specTxtColor",
+		name = "Text Color",
+		description = "",
+		section = specSection,
+		position = 2
+	)
+
+	default Color specTxtColor()
+	{
+		return Color.decode("#ffffff");
+	}
+
+	@ConfigItem(
+		keyName = "specProgress",
+		name = "Enable Special Attack Progress",
+		description = "Changes the icon background to a progress bar that shows how long it will take to charge the special attack bar.",
+		section = specSection,
+		position = 3
+	)
+
+	default boolean specProgress()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "specProgressColor",
+		name = "Special Attack Progress Color",
+		description = "The color of the special attack progress bar.",
+		section = specSection,
+		position = 4
+	)
+
+	default Color specProgressColor()
+	{
+		return Color.decode("#4398ae");
+	}
+	//endregion
 }

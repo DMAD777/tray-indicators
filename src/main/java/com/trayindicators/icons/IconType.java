@@ -30,5 +30,6 @@ public enum IconType
 	Prayer,
 	Absorption,
 	Cannon,
-	Inventory
+	Inventory,
+	Spec,
 }
