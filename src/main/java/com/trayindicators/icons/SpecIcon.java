@@ -46,6 +46,7 @@ public class SpecIcon extends Icon
 
 	private int ticksSinceSpecRegen;
 	private boolean wearingLightbearer;
+	private boolean cacheImage = true;
 
 	public SpecIcon(Client client, TrayIndicatorsConfig config)
 	{
@@ -65,9 +66,7 @@ public class SpecIcon extends Icon
 	@Override
 	public void updateIcon()
 	{
-		// Don't cache the icon if progress is enabled, as the progress bar will change every tick.
-		// Kinda dirty, but it works.
-		if (config.specProgress())
+		if (!cacheImage)
 		{
 			lastIconData = null;
 		}
@@ -116,6 +115,10 @@ public class SpecIcon extends Icon
 		{
 			ticksSinceSpecRegen = (ticksSinceSpecRegen + 1) % ticksPerSpecRegen;
 		}
+
+		// Don't cache the icon if progress is enabled, as the progress bar will change every tick thus requiring a new image.
+		// Kinda dirty, but it works.
+		cacheImage = !config.specProgress();
 
 		super.onGameTick(event);
 	}
