@@ -365,7 +365,7 @@ public interface TrayIndicatorsConfig extends Config
 
 	default Color specColor()
 	{
-		return Color.decode("#4398ae");
+		return Color.decode("#1b444f");
 	}
 
 	@ConfigItem(
@@ -379,6 +379,32 @@ public interface TrayIndicatorsConfig extends Config
 	default Color specTxtColor()
 	{
 		return Color.decode("#ffffff");
+	}
+
+	@ConfigItem(
+		keyName = "specProgress",
+		name = "Enable Special Attack Progress",
+		description = "",
+		section = specSection,
+		position = 3
+	)
+
+	default boolean specProgress()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "specProgressColor",
+		name = "Special Attack Progress Color",
+		description = "",
+		section = specSection,
+		position = 4
+	)
+
+	default Color specProgressColor()
+	{
+		return Color.decode("#4398ae");
 	}
 	//endregion
 }

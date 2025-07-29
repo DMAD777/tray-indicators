@@ -45,7 +45,7 @@ public abstract class Icon
 	protected final TrayIndicatorsConfig config;
 
 	private TrayIcon trayIcon;
-	private IconData lastIconData;
+	protected IconData lastIconData;
 
 	public Icon(IconType type, Client client, TrayIndicatorsConfig config)
 	{

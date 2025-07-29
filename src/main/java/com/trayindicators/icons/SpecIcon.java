@@ -25,11 +25,28 @@
 package com.trayindicators.icons;
 
 import com.trayindicators.TrayIndicatorsConfig;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import net.runelite.api.Client;
+import net.runelite.api.InventoryID;
+import net.runelite.api.ItemContainer;
 import net.runelite.api.VarPlayer;
+import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.gameval.ItemID;
 
 public class SpecIcon extends Icon
 {
+	private static final int SPEC_REGEN_TICKS = 50;
+	private static final int LIGHTBEARER_REGEN_TICKS = 25;
+	private static final int MAX_SPECIAL_ENERGY = 1000;
+
+	private int ticksSinceSpecRegen;
+	private boolean wearingLightbearer;
+
 	public SpecIcon(Client client, TrayIndicatorsConfig config)
 	{
 		super(IconType.Spec, client, config);
@@ -43,6 +60,108 @@ public class SpecIcon extends Icon
 			config.specColor(),
 			config.specTxtColor()
 		);
+	}
+
+	@Override
+	public void updateIcon()
+	{
+		// Don't cache the icon if progress is enabled, as the progress bar will change every tick.
+		// Kinda dirty, but it works.
+		if (config.specProgress())
+		{
+			lastIconData = null;
+		}
+
+		super.updateIcon();
+	}
+
+	@Override
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		if (event.getContainerId() != InventoryID.EQUIPMENT.getId())
+		{
+			return;
+		}
+
+		ItemContainer equipment = event.getItemContainer();
+
+		if (equipment == null)
+		{
+			return;
+		}
+
+		final boolean hasLightbearer = equipment.contains(ItemID.LIGHTBEARER);
+
+		// Reset some regen progress when equipping/removing Lightbearer
+		if (hasLightbearer != wearingLightbearer)
+		{
+			ticksSinceSpecRegen = Math.max(0, ticksSinceSpecRegen - LIGHTBEARER_REGEN_TICKS);
+		}
+
+		wearingLightbearer = hasLightbearer;
+	}
+
+	@Override
+	public void onGameTick(GameTick event)
+	{
+		int specialAttackEnergy = client.getVarpValue(VarPlayer.SPECIAL_ATTACK_PERCENT);
+		int ticksPerSpecRegen = wearingLightbearer ? SPEC_REGEN_TICKS / 2 : SPEC_REGEN_TICKS;
+
+		// Reset ticksSinceSpecRegen if special attack energy is full
+		if (specialAttackEnergy >= MAX_SPECIAL_ENERGY)
+		{
+			ticksSinceSpecRegen = 0;
+		}
+		else
+		{
+			ticksSinceSpecRegen = (ticksSinceSpecRegen + 1) % ticksPerSpecRegen;
+		}
+
+		super.onGameTick(event);
+	}
+
+	@Override
+	protected BufferedImage createImage(int value, Color bgColor, Color txtColor) {
+		// Use the default image creation if we don't have to draw the progress bar.
+		if (!config.specProgress())
+		{
+			return super.createImage(value, bgColor, txtColor);
+		}
+
+		final int ticksPerSpecRegen = wearingLightbearer ? LIGHTBEARER_REGEN_TICKS : SPEC_REGEN_TICKS;
+		int size = 16;
+		String text = Integer.toString(value);
+
+		BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D graphics = image.createGraphics();
+
+		float regenPercent = ticksSinceSpecRegen / (float) ticksPerSpecRegen;
+
+		int filledHeight = (int) (size * regenPercent);
+		int unfilledHeight = size - filledHeight;
+
+		// Draw unfilled area
+		graphics.setColor(bgColor);
+		graphics.fillRect(0, 0, size, unfilledHeight);
+
+		// Draw filled regen area
+		graphics.setColor(config.specProgressColor());
+		graphics.fillRect(0, unfilledHeight, size, filledHeight);
+
+		// Draw text
+		graphics.setColor(txtColor);
+
+		int fontSize = (text.length() >= 4) ? 8 : (text.length() == 3) ? 9 : 12;
+		graphics.setFont(new Font(graphics.getFont().getName(), Font.PLAIN, fontSize));
+
+		FontMetrics metrics = graphics.getFontMetrics();
+		int x = (size - metrics.stringWidth(text)) / 2;
+		int y = ((size - metrics.getHeight()) / 2) + metrics.getAscent();
+		graphics.drawString(text, x, y);
+
+		graphics.dispose();
+
+		return image;
 	}
 
 	@Override
