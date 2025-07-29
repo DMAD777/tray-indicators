@@ -7,6 +7,7 @@ Displays the following information:
 * Absorption in NMZ
 * Amount of cannonballs in your cannon
 * Amount of items in your inventory
+* Special attack
 
 Customizable options:
 * Icons can be disabled individually.

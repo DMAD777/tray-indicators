@@ -44,7 +44,7 @@ import java.util.*;
 @Slf4j
 @PluginDescriptor(
 	name = "Tray Indicators",
-	description = "Displays your hitpoints, prayer, absorption or cannonballs in the system tray.",
+	description = "Displays your hitpoints, prayer, absorption, special attack, cannon ammo or inventory count in the system tray.",
 	tags = {"notifications"}
 )
 public class TrayIndicatorsPlugin extends Plugin
