@@ -81,7 +81,10 @@ public abstract class Icon
 
 	public void onGameStateChanged(GameStateChanged event)
 	{
-		updateIcon();
+		if (event.getGameState() == GameState.LOGIN_SCREEN)
+		{
+			removeIcon();
+		}
 	}
 
 	public void onConfigChanged(ConfigChanged event)
@@ -97,7 +100,7 @@ public abstract class Icon
 
 	public void updateIcon()
 	{
-		if (client.getGameState() != GameState.LOGGED_IN || !isActive())
+		if (!isActive())
 		{
 			removeIcon();
 			return;
