@@ -41,7 +41,10 @@ public class HealthIcon extends Icon
 		return new IconData(
 			client.getBoostedSkillLevel(Skill.HITPOINTS),
 			config.healthColor(),
-			config.healthTxtColor()
+			config.healthTxtColor(),
+      config.healthTxtSize(),
+      config.healthXOffset(),
+      config.healthYOffset()
 		);
 	}
 

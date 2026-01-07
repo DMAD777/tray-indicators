@@ -30,3 +30,12 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 	options.release.set(11)
 }
+
+tasks.register('runTest', JavaExec) {
+    group = 'runelite'
+    description = 'Runs RuneLite client with TrayIndicators plugin loaded for testing'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.trayindicators.TrayIndicatorsPluginTest'
+    jvmArgs = ['-ea', '-Xmx2G']
+    args = ['--developer-mode', '--debug']
+}

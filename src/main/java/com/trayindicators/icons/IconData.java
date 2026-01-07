@@ -6,9 +6,11 @@ import lombok.EqualsAndHashCode;
 
 @AllArgsConstructor
 @EqualsAndHashCode
-public class IconData
-{
-	public int value;
-	public Color bgColor;
-	public Color txtColor;
+public class IconData {
+  public int value;
+  public Color bgColor;
+  public Color txtColor;
+  public int txtSize;
+  public int xOffset;
+  public int yOffset;
 }

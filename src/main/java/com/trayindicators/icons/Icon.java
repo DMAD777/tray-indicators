@@ -37,139 +37,116 @@ import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.client.events.ConfigChanged;
 
 @Slf4j
-public abstract class Icon
-{
-	public final IconType type;
+public abstract class Icon {
+  public final IconType type;
 
-	protected final Client client;
-	protected final TrayIndicatorsConfig config;
+  protected final Client client;
+  protected final TrayIndicatorsConfig config;
 
-	private TrayIcon trayIcon;
-	protected IconData lastIconData;
-	protected boolean cacheImage = true;
+  private TrayIcon trayIcon;
+  protected IconData lastIconData;
+  protected boolean cacheImage = true;
 
-	public Icon(IconType type, Client client, TrayIndicatorsConfig config)
-	{
-		this.type = type;
-		this.client = client;
-		this.config = config;
-	}
+  public Icon(IconType type, Client client, TrayIndicatorsConfig config) {
+    this.type = type;
+    this.client = client;
+    this.config = config;
+  }
 
-	private void createIcon(int value, Color bgColor, Color txtColor)
-	{
-		if (trayIcon != null)
-		{
-			removeIcon();
-		}
+  private void createIcon(int value, Color bgColor, Color txtColor, int txtSize, int xOffset, int yOffset) {
+    if (trayIcon != null) {
+      removeIcon();
+    }
 
-		trayIcon = new TrayIcon(createImage(value, bgColor, txtColor));
-		trayIcon.setImageAutoSize(true);
+    trayIcon = new TrayIcon(createImage(value, bgColor, txtColor, txtSize, xOffset, yOffset));
+    trayIcon.setImageAutoSize(true);
 
-		try
-		{
-			SystemTray.getSystemTray().add(trayIcon);
-		}
-		catch (AWTException ex)
-		{
-			log.error("Unable to add system tray icon.", ex);
-		}
-	}
+    try {
+      SystemTray.getSystemTray().add(trayIcon);
+    } catch (AWTException ex) {
+      log.error("Unable to add system tray icon.", ex);
+    }
+  }
 
-	public void onGameTick(GameTick event)
-	{
-		updateIcon();
-	}
+  public void onGameTick(GameTick event) {
+    updateIcon();
+  }
 
-	public void onGameStateChanged(GameStateChanged event)
-	{
-		if (event.getGameState() == GameState.LOGIN_SCREEN)
-		{
-			removeIcon();
-		}
-	}
+  public void onGameStateChanged(GameStateChanged event) {
+    if (event.getGameState() == GameState.LOGIN_SCREEN) {
+      removeIcon();
+    }
+  }
 
-	public void onConfigChanged(ConfigChanged event)
-	{
-		updateIcon();
-	}
+  public void onConfigChanged(ConfigChanged event) {
+    updateIcon();
+  }
 
-	public void onItemContainerChanged(ItemContainerChanged event)
-	{
-		// Default implementation does nothing
-		// Subclasses can override this method if needed
-	}
+  public void onItemContainerChanged(ItemContainerChanged event) {
+    // Default implementation does nothing
+    // Subclasses can override this method if needed
+  }
 
-	public void updateIcon()
-	{
-		if (!isActive())
-		{
-			removeIcon();
-			return;
-		}
+  public void updateIcon() {
+    if (!isActive()) {
+      removeIcon();
+      return;
+    }
 
-		IconData data = getIconData();
+    IconData data = getIconData();
 
-		if (cacheImage && trayIcon != null && data.equals(lastIconData))
-		{
-			return;
-		}
+    if (cacheImage && trayIcon != null && data.equals(lastIconData)) {
+      return;
+    }
 
-		if (trayIcon == null)
-		{
-			createIcon(data.value, data.bgColor, data.txtColor);
-		}
-		else
-		{
-			trayIcon.getImage().flush();
-			trayIcon.setImage(createImage(data.value, data.bgColor, data.txtColor));
-		}
+    if (trayIcon == null) {
+      createIcon(data.value, data.bgColor, data.txtColor, data.txtSize, data.xOffset, data.yOffset);
+    } else {
+      trayIcon.getImage().flush();
+      trayIcon.setImage(createImage(data.value, data.bgColor, data.txtColor, data.txtSize, data.xOffset, data.yOffset));
+    }
 
-		if (cacheImage)
-		{
-			lastIconData = data;
-		}
-	}
+    if (cacheImage) {
+      lastIconData = data;
+    }
+  }
 
-	public void removeIcon()
-	{
-		if (trayIcon == null)
-		{
-			return;
-		}
+  public void removeIcon() {
+    if (trayIcon == null) {
+      return;
+    }
 
-		SystemTray.getSystemTray().remove(trayIcon);
-		trayIcon = null;
-	}
+    SystemTray.getSystemTray().remove(trayIcon);
+    trayIcon = null;
+  }
 
-	protected BufferedImage createImage(int value, Color bgColor, Color txtColor)
-	{
-		int size = 16;
-		String text = Integer.toString(value);
+  protected BufferedImage createImage(int value, Color bgColor, Color txtColor, int txtSize, int xOffset, int yOffset) {
+    int size = 16;
+    String text = Integer.toString(value);
 
-		BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics2D graphics = image.createGraphics();
+    BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_4BYTE_ABGR);
+    Graphics2D graphics = image.createGraphics();
 
-		// Draw background
-		graphics.setColor(bgColor);
-		graphics.fillRect(0, 0, size, size);
+    // Draw background
+    graphics.setColor(bgColor);
+    graphics.fillRect(0, 0, size, size);
 
-		// Draw text
-		graphics.setColor(txtColor);
+    // Draw text
+    graphics.setColor(txtColor);
 
-		int fontSize = (text.length() >= 4) ? 8 : (text.length() == 3) ? 9 : 12;
-		graphics.setFont(new Font(graphics.getFont().getName(), Font.PLAIN, fontSize));
+    graphics.setFont(new Font(graphics.getFont().getName(), Font.PLAIN, txtSize));
 
-		FontMetrics metrics = graphics.getFontMetrics();
-		int x = (size - metrics.stringWidth(text)) / 2;
-		int y = ((size - metrics.getHeight()) / 2) + metrics.getAscent();
-		graphics.drawString(text, x, y);
+    FontMetrics metrics = graphics.getFontMetrics();
+    int x = ((size - metrics.stringWidth(text)) / 2) - xOffset;
+    int y = ((size - metrics.getHeight()) / 2) + metrics.getAscent() - yOffset;
+    graphics.drawString(text, x, y);
 
-		graphics.dispose();
+    graphics.dispose();
 
-		return image;
-	}
+    return image;
+  }
 
-	public abstract IconData getIconData();
+  public abstract IconData getIconData();
 
-	public abstract boolean isActive();
+  public abstract boolean isActive();
 }

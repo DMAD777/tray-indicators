@@ -70,7 +70,10 @@ public class CannonIcon extends Icon
 		return new IconData(
 			value,
 			config.cannonColor(),
-			txtColor
+			txtColor,
+      config.cannonTxtSize(),
+      config.cannonXOffset(),
+      config.cannonYOffset()
 		);
 	}
 

@@ -31,14 +31,12 @@ import net.runelite.api.Client;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.InventoryID;
 
-public class InventoryIcon extends Icon
-{
-	public InventoryIcon(Client client, TrayIndicatorsConfig config)
-	{
-		super(IconType.Inventory, client, config);
-	}
+public class InventoryIcon extends Icon {
+  public InventoryIcon(Client client, TrayIndicatorsConfig config) {
+    super(IconType.Inventory, client, config);
+  }
 
-	@Override
+  @Override
 	public IconData getIconData()
 	{
 		int filledSlots = getFilledInventorySlots();
@@ -60,33 +58,32 @@ public class InventoryIcon extends Icon
 		return new IconData(
 			filledSlots,
 			config.inventoryColor(),
-			txtColor
+			txtColor,
+      config.inventoryTxtSize(),
+      config.inventoryXOffset(),
+      config.inventoryYOffset()
 		);
 	}
 
-	@Override
-	public boolean isActive()
-	{
-		return config.inventory();
-	}
+  @Override
+  public boolean isActive() {
+    return config.inventory();
+  }
 
-	private int getFilledInventorySlots()
-	{
-		// Make sure we are on the client thread
-		if (!client.isClientThread())
-		{
-			return 0;
-		}
+  private int getFilledInventorySlots() {
+    // Make sure we are on the client thread
+    if (!client.isClientThread()) {
+      return 0;
+    }
 
-		ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
+    ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
 
-		if (inventory == null)
-		{
-			return 0;
-		}
+    if (inventory == null) {
+      return 0;
+    }
 
-		return (int)Arrays.stream(inventory.getItems())
-			.filter(item -> item.getQuantity() > 0)
-			.count();
-	}
+    return (int) Arrays.stream(inventory.getItems())
+        .filter(item -> item.getQuantity() > 0)
+        .count();
+  }
 }
