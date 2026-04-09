@@ -28,112 +28,90 @@ import com.trayindicators.TrayIndicatorsConfig;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.client.events.ConfigChanged;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 @Slf4j
-public abstract class Icon
-{
+public abstract class Icon {
 	public final IconType type;
 
 	protected final Client client;
 	protected final TrayIndicatorsConfig config;
-
-	private TrayIcon trayIcon;
 	protected IconData lastIconData;
 	protected boolean cacheImage = true;
+	private TrayIcon trayIcon;
 
-	public Icon(IconType type, Client client, TrayIndicatorsConfig config)
-	{
+	public Icon(IconType type, Client client, TrayIndicatorsConfig config) {
 		this.type = type;
 		this.client = client;
 		this.config = config;
 	}
 
-	private void createIcon(int value, Color bgColor, Color txtColor)
-	{
-		if (trayIcon != null)
-		{
+	private void createIcon(int value, Color bgColor, Color txtColor) {
+		if (trayIcon != null) {
 			removeIcon();
 		}
 
 		trayIcon = new TrayIcon(createImage(value, bgColor, txtColor));
 		trayIcon.setImageAutoSize(true);
 
-		try
-		{
+		try {
 			SystemTray.getSystemTray().add(trayIcon);
-		}
-		catch (AWTException ex)
-		{
+		} catch (AWTException ex) {
 			log.error("Unable to add system tray icon.", ex);
 		}
 	}
 
-	public void onGameTick(GameTick event)
-	{
+	public void onGameTick(GameTick event) {
 		updateIcon();
 	}
 
-	public void onGameStateChanged(GameStateChanged event)
-	{
-		if (event.getGameState() == GameState.LOGIN_SCREEN)
-		{
+	public void onGameStateChanged(GameStateChanged event) {
+		if (event.getGameState() == GameState.LOGIN_SCREEN) {
 			removeIcon();
 		}
 	}
 
-	public void onConfigChanged(ConfigChanged event)
-	{
+	public void onConfigChanged(ConfigChanged event) {
 		updateIcon();
 	}
 
-	public void onItemContainerChanged(ItemContainerChanged event)
-	{
+	public void onItemContainerChanged(ItemContainerChanged event) {
 		// Default implementation does nothing
 		// Subclasses can override this method if needed
 	}
 
-	public void updateIcon()
-	{
-		if (!isActive())
-		{
+	public void updateIcon() {
+		if (!isActive()) {
 			removeIcon();
 			return;
 		}
 
 		IconData data = getIconData();
 
-		if (cacheImage && trayIcon != null && data.equals(lastIconData))
-		{
+		if (cacheImage && trayIcon != null && data.equals(lastIconData)) {
 			return;
 		}
 
-		if (trayIcon == null)
-		{
+		if (trayIcon == null) {
 			createIcon(data.value, data.bgColor, data.txtColor);
-		}
-		else
-		{
+		} else {
 			trayIcon.getImage().flush();
 			trayIcon.setImage(createImage(data.value, data.bgColor, data.txtColor));
 		}
 
-		if (cacheImage)
-		{
+		if (cacheImage) {
 			lastIconData = data;
 		}
 	}
 
-	public void removeIcon()
-	{
-		if (trayIcon == null)
-		{
+	public void removeIcon() {
+		if (trayIcon == null) {
 			return;
 		}
 
@@ -141,8 +119,7 @@ public abstract class Icon
 		trayIcon = null;
 	}
 
-	protected BufferedImage createImage(int value, Color bgColor, Color txtColor)
-	{
+	protected BufferedImage createImage(int value, Color bgColor, Color txtColor) {
 		int size = 16;
 		String text = Integer.toString(value);
 

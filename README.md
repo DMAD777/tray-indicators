@@ -1,7 +1,9 @@
 # Tray Indicators
+
 Displays icons the system tray with information about your character.
 
 Displays the following information:
+
 * Hitpoints
 * Prayer
 * Absorption in NMZ
@@ -10,6 +12,7 @@ Displays the following information:
 * Special attack
 
 Customizable options:
+
 * Icons can be disabled individually.
 * Background and text colors are fully customizable.
 

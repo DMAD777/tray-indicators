@@ -25,11 +25,6 @@
 package com.trayindicators.icons;
 
 import com.trayindicators.TrayIndicatorsConfig;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import net.runelite.api.Client;
 import net.runelite.api.InventoryID;
 import net.runelite.api.ItemContainer;
@@ -38,8 +33,10 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.gameval.ItemID;
 
-public class SpecIcon extends Icon
-{
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+public class SpecIcon extends Icon {
 	private static final int SPEC_REGEN_TICKS = 50;
 	private static final int LIGHTBEARER_REGEN_TICKS = 25;
 	private static final int MAX_SPECIAL_ENERGY = 1000;
@@ -47,14 +44,12 @@ public class SpecIcon extends Icon
 	private int ticksSinceSpecRegen;
 	private boolean wearingLightbearer;
 
-	public SpecIcon(Client client, TrayIndicatorsConfig config)
-	{
+	public SpecIcon(Client client, TrayIndicatorsConfig config) {
 		super(IconType.Spec, client, config);
 	}
 
 	@Override
-	public IconData getIconData()
-	{
+	public IconData getIconData() {
 		return new IconData(
 			client.getVarpValue(VarPlayer.SPECIAL_ATTACK_PERCENT) / 10,
 			config.specColor(),
@@ -63,25 +58,21 @@ public class SpecIcon extends Icon
 	}
 
 	@Override
-	public void onItemContainerChanged(ItemContainerChanged event)
-	{
-		if (event.getContainerId() != InventoryID.EQUIPMENT.getId())
-		{
+	public void onItemContainerChanged(ItemContainerChanged event) {
+		if (event.getContainerId() != InventoryID.EQUIPMENT.getId()) {
 			return;
 		}
 
 		ItemContainer equipment = event.getItemContainer();
 
-		if (equipment == null)
-		{
+		if (equipment == null) {
 			return;
 		}
 
 		final boolean hasLightbearer = equipment.contains(ItemID.LIGHTBEARER);
 
 		// Reset some regen progress when equipping/removing Lightbearer
-		if (hasLightbearer != wearingLightbearer)
-		{
+		if (hasLightbearer != wearingLightbearer) {
 			ticksSinceSpecRegen = Math.max(0, ticksSinceSpecRegen - LIGHTBEARER_REGEN_TICKS);
 		}
 
@@ -89,18 +80,14 @@ public class SpecIcon extends Icon
 	}
 
 	@Override
-	public void onGameTick(GameTick event)
-	{
+	public void onGameTick(GameTick event) {
 		int specialAttackEnergy = client.getVarpValue(VarPlayer.SPECIAL_ATTACK_PERCENT);
 		int ticksPerSpecRegen = wearingLightbearer ? SPEC_REGEN_TICKS / 2 : SPEC_REGEN_TICKS;
 
 		// Reset ticksSinceSpecRegen if special attack energy is full
-		if (specialAttackEnergy >= MAX_SPECIAL_ENERGY)
-		{
+		if (specialAttackEnergy >= MAX_SPECIAL_ENERGY) {
 			ticksSinceSpecRegen = 0;
-		}
-		else
-		{
+		} else {
 			ticksSinceSpecRegen = (ticksSinceSpecRegen + 1) % ticksPerSpecRegen;
 		}
 
@@ -114,8 +101,7 @@ public class SpecIcon extends Icon
 	@Override
 	protected BufferedImage createImage(int value, Color bgColor, Color txtColor) {
 		// Use the default image creation if we don't have to draw the progress bar.
-		if (!config.specProgress())
-		{
+		if (!config.specProgress()) {
 			return super.createImage(value, bgColor, txtColor);
 		}
 
@@ -156,8 +142,7 @@ public class SpecIcon extends Icon
 	}
 
 	@Override
-	public boolean isActive()
-	{
+	public boolean isActive() {
 		return config.spec();
 	}
 }

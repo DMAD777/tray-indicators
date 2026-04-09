@@ -24,16 +24,15 @@
  */
 package com.trayindicators;
 
-import java.awt.Color;
-
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
 
+import java.awt.*;
+
 @ConfigGroup("Tray Indicators")
-public interface TrayIndicatorsConfig extends Config
-{
+public interface TrayIndicatorsConfig extends Config {
 
 	//region Health Options
 	@ConfigSection(
@@ -42,6 +41,44 @@ public interface TrayIndicatorsConfig extends Config
 		position = 0
 	)
 	String healthSection = "Hitpoints";
+	//region Prayer Options
+	@ConfigSection(
+		name = "Prayer",
+		description = "",
+		position = 1
+	)
+	String prayerSection = "Prayer";
+	//region Absorption Options
+	@ConfigSection(
+		name = "Absorption",
+		description = "",
+		position = 2
+	)
+	String absorptionSection = "Absorption";
+	//region Cannonballs Options
+	@ConfigSection(
+		name = "Cannon",
+		description = "",
+		position = 3
+	)
+	String cannonSection = "Cannon";
+	//endregion
+	//region Inventory Options
+	@ConfigSection(
+		name = "Inventory",
+		description = "",
+		position = 4
+	)
+
+	String inventorySection = "Inventory";
+	//region Special Attack Options
+	@ConfigSection(
+		name = "Special Attack",
+		description = "",
+		position = 5
+	)
+
+	String specSection = "Special Attack";
 
 	@ConfigItem(
 		keyName = "health",
@@ -50,8 +87,7 @@ public interface TrayIndicatorsConfig extends Config
 		section = healthSection,
 		position = 0
 	)
-	default boolean health()
-	{
+	default boolean health() {
 		return true;
 	}
 
@@ -62,10 +98,10 @@ public interface TrayIndicatorsConfig extends Config
 		section = healthSection,
 		position = 1
 	)
-	default Color healthColor()
-	{
+	default Color healthColor() {
 		return Color.decode("#ff0000");
 	}
+	//endregion
 
 	@ConfigItem(
 		keyName = "healthTxtColor",
@@ -74,19 +110,9 @@ public interface TrayIndicatorsConfig extends Config
 		section = healthSection,
 		position = 2
 	)
-	default Color healthTxtColor()
-	{
+	default Color healthTxtColor() {
 		return Color.decode("#ffffff");
 	}
-	//endregion
-
-	//region Prayer Options
-	@ConfigSection(
-		name = "Prayer",
-		description = "",
-		position = 1
-	)
-	String prayerSection = "Prayer";
 
 	@ConfigItem(
 		keyName = "prayer",
@@ -95,8 +121,7 @@ public interface TrayIndicatorsConfig extends Config
 		section = prayerSection,
 		position = 0
 	)
-	default boolean prayer()
-	{
+	default boolean prayer() {
 		return true;
 	}
 
@@ -107,8 +132,7 @@ public interface TrayIndicatorsConfig extends Config
 		section = prayerSection,
 		position = 1
 	)
-	default Color prayerColor()
-	{
+	default Color prayerColor() {
 		return Color.decode("#00f3ff");
 	}
 
@@ -119,19 +143,10 @@ public interface TrayIndicatorsConfig extends Config
 		section = prayerSection,
 		position = 2
 	)
-	default Color prayerTxtColor()
-	{
+	default Color prayerTxtColor() {
 		return Color.decode("#000000");
 	}
 	//endregion
-
-	//region Absorption Options
-	@ConfigSection(
-		name = "Absorption",
-		description = "",
-		position = 2
-	)
-	String absorptionSection = "Absorption";
 
 	@ConfigItem(
 		keyName = "absorption",
@@ -140,8 +155,7 @@ public interface TrayIndicatorsConfig extends Config
 		section = absorptionSection,
 		position = 0
 	)
-	default boolean absorption()
-	{
+	default boolean absorption() {
 		return true;
 	}
 
@@ -153,8 +167,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 1
 	)
 
-	default Color absorptionColor()
-	{
+	default Color absorptionColor() {
 		return Color.decode("#ffffff");
 	}
 
@@ -166,19 +179,9 @@ public interface TrayIndicatorsConfig extends Config
 		position = 2
 	)
 
-	default Color absorptionTxtColor()
-	{
+	default Color absorptionTxtColor() {
 		return Color.decode("#000000");
 	}
-	//endregion
-
-	//region Cannonballs Options
-	@ConfigSection(
-		name = "Cannon",
-		description = "",
-		position = 3
-	)
-	String cannonSection = "Cannon";
 
 	@ConfigItem(
 		keyName = "cannon",
@@ -187,8 +190,7 @@ public interface TrayIndicatorsConfig extends Config
 		section = cannonSection,
 		position = 0
 	)
-	default boolean cannon()
-	{
+	default boolean cannon() {
 		return true;
 	}
 
@@ -200,10 +202,10 @@ public interface TrayIndicatorsConfig extends Config
 		position = 1
 	)
 
-	default Color cannonColor()
-	{
+	default Color cannonColor() {
 		return Color.decode("#797979");
 	}
+	//endregion
 
 	@ConfigItem(
 		keyName = "cannonTxtColor",
@@ -213,8 +215,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 2
 	)
 
-	default Color cannonTxtColor()
-	{
+	default Color cannonTxtColor() {
 		return Color.decode("#ffffff");
 	}
 
@@ -226,20 +227,9 @@ public interface TrayIndicatorsConfig extends Config
 		position = 3
 	)
 
-	default boolean cannonTxtDynamic()
-	{
+	default boolean cannonTxtDynamic() {
 		return false;
 	}
-	//endregion
-
-	//region Inventory Options
-	@ConfigSection(
-		name = "Inventory",
-		description = "",
-		position = 4
-	)
-
-	String inventorySection = "Inventory";
 
 	@ConfigItem(
 		keyName = "inventory",
@@ -249,8 +239,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 0
 	)
 
-	default boolean inventory()
-	{
+	default boolean inventory() {
 		return true;
 	}
 
@@ -262,8 +251,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 1
 	)
 
-	default Color inventoryColor()
-	{
+	default Color inventoryColor() {
 		return Color.decode("#845020");
 	}
 
@@ -275,8 +263,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 2
 	)
 
-	default Color inventoryTxtColor()
-	{
+	default Color inventoryTxtColor() {
 		return Color.decode("#ffffff");
 	}
 
@@ -288,8 +275,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 3
 	)
 
-	default int inventoryThreshold()
-	{
+	default int inventoryThreshold() {
 		return 20;
 	}
 
@@ -301,8 +287,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 4
 	)
 
-	default Color inventoryTxtThresholdColor()
-	{
+	default Color inventoryTxtThresholdColor() {
 		return Color.decode("#ff6a00");
 	}
 
@@ -314,10 +299,10 @@ public interface TrayIndicatorsConfig extends Config
 		position = 5
 	)
 
-	default Color inventoryTxtFullColor()
-	{
+	default Color inventoryTxtFullColor() {
 		return Color.decode("#00ff26");
 	}
+	//endregion
 
 	@ConfigItem(
 		keyName = "inventoryEmptyTxtColor",
@@ -327,20 +312,9 @@ public interface TrayIndicatorsConfig extends Config
 		position = 6
 	)
 
-	default Color inventoryTxtEmptyColor()
-	{
+	default Color inventoryTxtEmptyColor() {
 		return Color.decode("#ff0000");
 	}
-	//endregion
-
-	//region Special Attack Options
-	@ConfigSection(
-		name = "Special Attack",
-		description = "",
-		position = 5
-	)
-
-	String specSection = "Special Attack";
 
 	@ConfigItem(
 		keyName = "spec",
@@ -350,8 +324,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 0
 	)
 
-	default boolean spec()
-	{
+	default boolean spec() {
 		return true;
 	}
 
@@ -363,8 +336,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 1
 	)
 
-	default Color specColor()
-	{
+	default Color specColor() {
 		return Color.decode("#1b444f");
 	}
 
@@ -376,8 +348,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 2
 	)
 
-	default Color specTxtColor()
-	{
+	default Color specTxtColor() {
 		return Color.decode("#ffffff");
 	}
 
@@ -389,8 +360,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 3
 	)
 
-	default boolean specProgress()
-	{
+	default boolean specProgress() {
 		return true;
 	}
 
@@ -402,8 +372,7 @@ public interface TrayIndicatorsConfig extends Config
 		position = 4
 	)
 
-	default Color specProgressColor()
-	{
+	default Color specProgressColor() {
 		return Color.decode("#4398ae");
 	}
 	//endregion

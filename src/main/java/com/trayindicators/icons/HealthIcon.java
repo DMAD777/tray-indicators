@@ -28,16 +28,13 @@ import com.trayindicators.TrayIndicatorsConfig;
 import net.runelite.api.Client;
 import net.runelite.api.Skill;
 
-public class HealthIcon extends Icon
-{
-	public HealthIcon(Client client, TrayIndicatorsConfig config)
-	{
+public class HealthIcon extends Icon {
+	public HealthIcon(Client client, TrayIndicatorsConfig config) {
 		super(IconType.Health, client, config);
 	}
 
 	@Override
-	public IconData getIconData()
-	{
+	public IconData getIconData() {
 		return new IconData(
 			client.getBoostedSkillLevel(Skill.HITPOINTS),
 			config.healthColor(),
@@ -46,8 +43,7 @@ public class HealthIcon extends Icon
 	}
 
 	@Override
-	public boolean isActive()
-	{
+	public boolean isActive() {
 		return config.health();
 	}
 }

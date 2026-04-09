@@ -25,22 +25,20 @@
 package com.trayindicators.icons;
 
 import com.trayindicators.TrayIndicatorsConfig;
-import java.util.Arrays;
 import net.runelite.api.Client;
 import net.runelite.api.Varbits;
 
-public class AbsorptionIcon extends Icon
-{
+import java.util.Arrays;
+
+public class AbsorptionIcon extends Icon {
 	private static final int[] NMZ_MAP_REGION = {9033};
 
-	public AbsorptionIcon(Client client, TrayIndicatorsConfig config)
-	{
+	public AbsorptionIcon(Client client, TrayIndicatorsConfig config) {
 		super(IconType.Absorption, client, config);
 	}
 
 	@Override
-	public IconData getIconData()
-	{
+	public IconData getIconData() {
 		return new IconData(
 			client.getVarbitValue(Varbits.NMZ_ABSORPTION),
 			config.absorptionColor(),
@@ -49,13 +47,11 @@ public class AbsorptionIcon extends Icon
 	}
 
 	@Override
-	public boolean isActive()
-	{
+	public boolean isActive() {
 		return config.absorption() && isInNightmareZone();
 	}
 
-	private boolean isInNightmareZone()
-	{
+	private boolean isInNightmareZone() {
 		return Arrays.equals(client.getMapRegions(), NMZ_MAP_REGION);
 	}
 }

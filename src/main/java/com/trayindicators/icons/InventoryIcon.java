@@ -25,35 +25,28 @@
 package com.trayindicators.icons;
 
 import com.trayindicators.TrayIndicatorsConfig;
-import java.awt.Color;
-import java.util.Arrays;
 import net.runelite.api.Client;
-import net.runelite.api.ItemContainer;
 import net.runelite.api.InventoryID;
+import net.runelite.api.ItemContainer;
 
-public class InventoryIcon extends Icon
-{
-	public InventoryIcon(Client client, TrayIndicatorsConfig config)
-	{
+import java.awt.*;
+import java.util.Arrays;
+
+public class InventoryIcon extends Icon {
+	public InventoryIcon(Client client, TrayIndicatorsConfig config) {
 		super(IconType.Inventory, client, config);
 	}
 
 	@Override
-	public IconData getIconData()
-	{
+	public IconData getIconData() {
 		int filledSlots = getFilledInventorySlots();
 		Color txtColor = config.inventoryTxtColor();
 
-		if (filledSlots <= 0)
-		{
+		if (filledSlots <= 0) {
 			txtColor = config.inventoryTxtEmptyColor();
-		}
-		else if (filledSlots >= 28)
-		{
+		} else if (filledSlots >= 28) {
 			txtColor = config.inventoryTxtFullColor();
-		}
-		else if (filledSlots >= config.inventoryThreshold())
-		{
+		} else if (filledSlots >= config.inventoryThreshold()) {
 			txtColor = config.inventoryTxtThresholdColor();
 		}
 
@@ -65,27 +58,23 @@ public class InventoryIcon extends Icon
 	}
 
 	@Override
-	public boolean isActive()
-	{
+	public boolean isActive() {
 		return config.inventory();
 	}
 
-	private int getFilledInventorySlots()
-	{
+	private int getFilledInventorySlots() {
 		// Make sure we are on the client thread
-		if (!client.isClientThread())
-		{
+		if (!client.isClientThread()) {
 			return 0;
 		}
 
 		ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
 
-		if (inventory == null)
-		{
+		if (inventory == null) {
 			return 0;
 		}
 
-		return (int)Arrays.stream(inventory.getItems())
+		return (int) Arrays.stream(inventory.getItems())
 			.filter(item -> item.getQuantity() > 0)
 			.count();
 	}

@@ -28,16 +28,13 @@ import com.trayindicators.TrayIndicatorsConfig;
 import net.runelite.api.Client;
 import net.runelite.api.Skill;
 
-public class PrayerIcon extends Icon
-{
-	public PrayerIcon(Client client, TrayIndicatorsConfig config)
-	{
+public class PrayerIcon extends Icon {
+	public PrayerIcon(Client client, TrayIndicatorsConfig config) {
 		super(IconType.Prayer, client, config);
 	}
 
 	@Override
-	public IconData getIconData()
-	{
+	public IconData getIconData() {
 		return new IconData(
 			client.getBoostedSkillLevel(Skill.PRAYER),
 			config.prayerColor(),
@@ -46,8 +43,7 @@ public class PrayerIcon extends Icon
 	}
 
 	@Override
-	public boolean isActive()
-	{
+	public boolean isActive() {
 		return config.prayer();
 	}
 }

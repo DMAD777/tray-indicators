@@ -28,42 +28,35 @@ import com.trayindicators.TrayIndicatorsConfig;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.VarPlayer;
-import java.awt.Color;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.client.eventbus.Subscribe;
 
-public class CannonIcon extends Icon
-{
+import java.awt.*;
+
+public class CannonIcon extends Icon {
 	private boolean cannonPlaced;
 
-	public CannonIcon(Client client, TrayIndicatorsConfig config)
-	{
+	public CannonIcon(Client client, TrayIndicatorsConfig config) {
 		super(IconType.Cannon, client, config);
 	}
 
 	@Subscribe
-	public void onChatMessage(ChatMessage event)
-	{
-		if (event.getType() != ChatMessageType.SPAM && event.getType() != ChatMessageType.GAMEMESSAGE)
-		{
+	public void onChatMessage(ChatMessage event) {
+		if (event.getType() != ChatMessageType.SPAM && event.getType() != ChatMessageType.GAMEMESSAGE) {
 			return;
 		}
 
-		if (event.getMessage().equals("You add the furnace."))
-		{
+		if (event.getMessage().equals("You add the furnace.")) {
 			cannonPlaced = true;
-		}
-		else if (event.getMessage().contains("You pick up the cannon")
+		} else if (event.getMessage().contains("You pick up the cannon")
 			|| event.getMessage().contains("Your cannon has decayed.")
-			|| event.getMessage().contains("Your cannon has been destroyed!"))
-		{
+			|| event.getMessage().contains("Your cannon has been destroyed!")) {
 			cannonPlaced = false;
 		}
 	}
 
 	@Override
-	public IconData getIconData()
-	{
+	public IconData getIconData() {
 		int value = client.getVarpValue(VarPlayer.CANNON_AMMO);
 		Color txtColor = config.cannonTxtDynamic() ? getDynamicTextColor(value) : config.cannonTxtColor();
 
@@ -74,14 +67,10 @@ public class CannonIcon extends Icon
 		);
 	}
 
-	private Color getDynamicTextColor(int cannonballs)
-	{
-		if (cannonballs > 15)
-		{
+	private Color getDynamicTextColor(int cannonballs) {
+		if (cannonballs > 15) {
 			return Color.GREEN;
-		}
-		else if (cannonballs > 5)
-		{
+		} else if (cannonballs > 5) {
 			return Color.ORANGE;
 		}
 
@@ -89,8 +78,7 @@ public class CannonIcon extends Icon
 	}
 
 	@Override
-	public boolean isActive()
-	{
+	public boolean isActive() {
 		return config.cannon() && cannonPlaced;
 	}
 }

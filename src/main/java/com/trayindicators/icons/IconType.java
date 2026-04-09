@@ -24,8 +24,7 @@
  */
 package com.trayindicators.icons;
 
-public enum IconType
-{
+public enum IconType {
 	Health,
 	Prayer,
 	Absorption,
